@@ -1,0 +1,30 @@
+{{ define "main" }}
+<div class="content-wrap post-layout">
+  {{ $toc := .TableOfContents }}
+  {{ if findRE `<a href` $toc }}
+  <aside class="toc-panel acrylic">
+    <div class="toc-head"><span>目录</span><span class="toc-hint">点击章节名可折叠</span></div>
+    {{ $toc | safeHTML }}
+  </aside>
+  {{ end }}
+
+  <article class="post acrylic">
+    <header class="post-head">
+      <h1>{{ .Title }}</h1>
+      <div class="post-meta">
+        <time>{{ .Date.Format "2006-01-02" }}</time>
+        {{ with .GetTerms "tags" }}<span class="meta-sep">·</span>{{ range . }}<span class="tag"># {{ .LinkTitle }}</span>{{ end }}{{ end }}
+      </div>
+    </header>
+
+    <div class="post-body">
+      {{ .Content }}
+    </div>
+
+    <section class="comments">
+      <h2>评论</h2>
+      <div id="giscus-container"></div>
+    </section>
+  </article>
+</div>
+{{ end }}

@@ -1,0 +1,16 @@
+<script id="site-config" type="application/json">{{ (dict
+  "github" site.Params.github
+  "giscus" (dict
+    "repo" site.Params.giscus.repo
+    "repoId" site.Params.giscus.repoId
+    "category" site.Params.giscus.category
+    "categoryId" site.Params.giscus.categoryId
+    "mapping" site.Params.giscus.mapping
+    "strict" site.Params.giscus.strict
+    "reactionsEnabled" site.Params.giscus.reactionsEnabled
+    "emitMetadata" site.Params.giscus.emitMetadata
+    "inputPosition" site.Params.giscus.inputPosition
+    "lang" site.Params.giscus.lang
+    "loading" site.Params.giscus.loading)
+) | jsonify | safeJS }}</script>
+<script id="site-assets" type="application/json">{{ hugo.Data.assets | jsonify | safeJS }}</script>

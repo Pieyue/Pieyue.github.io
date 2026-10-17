@@ -1,0 +1,23 @@
+{{ define "main" }}
+<section class="hero">
+  <h1 class="hero-title">{{ site.Title }}</h1>
+  <p class="thorough-tagline">这就是……通透世界！</p>
+
+  <div class="hero-search-wrap">
+    <form id="hero-search" class="hero-search" action="{{ "search/" | relURL }}" method="get" role="search">
+      <input type="search" name="q" placeholder="在博客中搜索……" autocomplete="off" aria-label="在博客中搜索">
+      <button type="submit" aria-label="搜索">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/>
+        </svg>
+      </button>
+    </form>
+    <div id="search-suggest" class="search-suggest" hidden></div>
+  </div>
+
+  <div class="hero-actions">
+    <a class="btn ghost" href="{{ site.Params.github }}" target="_blank" rel="noopener">关于我</a>
+    <a class="btn solid" href="{{ "posts/" | relURL }}">进入博客</a>
+  </div>
+</section>
+{{ end }}
