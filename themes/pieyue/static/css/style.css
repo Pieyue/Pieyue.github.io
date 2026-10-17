@@ -31,7 +31,13 @@ body.night {
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;   /* 禁止安卓浏览器自动放大字体 */
+  text-size-adjust: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;                 /* 杜绝横向溢出（移动端缩放问题的根源） */
+}
 
 body {
   margin: 0;
@@ -228,7 +234,7 @@ body.is-home .content-only { display: none; }
    主页 Hero
    ========================================================================== */
 
-main { position: relative; z-index: 10; }
+main { position: relative; }   /* 不设 z-index：让目录悬浮按钮等固定元素能盖过播放器热区 */
 
 .hero {
   min-height: 100svh;
@@ -458,7 +464,7 @@ mark { background: rgba(255, 213, 79, 0.85); color: #1d2534; border-radius: 3px;
 }
 .toc-hint { font-size: 0.72rem; font-weight: 400; color: var(--ink-soft); letter-spacing: 0.02em; }
 
-/* 移动端目录悬浮按钮（桌面隐藏） */
+/* 移动端目录悬浮按钮（桌面隐藏）：白色圆底 + 淡蓝色图标，可拖动 */
 #toc-fab {
   display: none;
   position: fixed;
@@ -472,13 +478,20 @@ mark { background: rgba(255, 213, 79, 0.85); color: #1d2534; border-radius: 3px;
   z-index: 58;
   align-items: center;
   justify-content: center;
-  color: #fff;
-  background: linear-gradient(135deg, #4f8cff, #7db4ff);
-  box-shadow: 0 6px 20px rgba(79, 140, 255, 0.45);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: #8ec5ff;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 4px 18px rgba(10, 20, 40, 0.22);
+  transition: box-shadow 0.2s ease;
+  touch-action: none;                /* 拖动时不滚动页面 */
+  user-select: none;
+  -webkit-user-select: none;
 }
 #toc-fab svg { width: 20px; height: 20px; }
-#toc-fab:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(79, 140, 255, 0.55); }
+#toc-fab:hover { box-shadow: 0 8px 26px rgba(10, 20, 40, 0.3); }
+/* 松手吸附的滑动过渡（拖动过程中不加，保证紧跟手指） */
+#toc-fab.snapping {
+  transition: left 0.32s cubic-bezier(0.22, 1, 0.36, 1), top 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
 
 #TableOfContents ul { list-style: none; margin: 0; padding: 0; }
 #TableOfContents > ul > li { margin: 2px 0; }
@@ -605,6 +618,16 @@ body.night .post-body code { background: rgba(255, 255, 255, 0.1); }
 }
 .highlight pre code { background: none; padding: 0; font-size: inherit; }
 
+/* 代码块滚动条：与深色代码主题匹配 */
+.highlight pre {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+.highlight pre::-webkit-scrollbar { width: 8px; height: 8px; }
+.highlight pre::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.04); }
+.highlight pre::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 999px; }
+.highlight pre::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.35); }
+
 /* 代码块顶部工具条：语言名 + 复制图标（CSDN 风格） */
 .code-header {
   display: flex;
@@ -713,6 +736,10 @@ body.night .post-item { background: rgba(255, 255, 255, 0.04); }
   width: 88px;
   height: 380px;
   z-index: 49;
+}
+/* 触屏设备：悬停无意义，禁用热区（改为点击播放器边缘条打开） */
+@media (hover: none) {
+  #player-hotzone { display: none; }
 }
 
 #player {
@@ -1085,6 +1112,13 @@ body.night .wp-rainrow { background: rgba(79, 140, 255, 0.16); }
 
 #app-main { transition: opacity 0.16s ease, transform 0.16s ease; }
 #app-main.swap-fade { opacity: 0; transform: translateY(8px); }
+
+/* 进入文章/页面的入场过渡（每次挂载都会播放） */
+.post, .page-card { animation: pageIn 0.5s ease both; }
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
 
 @media (prefers-reduced-motion: no-preference) {
   ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.3s; }
