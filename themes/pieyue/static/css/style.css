@@ -35,8 +35,7 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;   /* 禁止安卓浏览器自动放大字体 */
   text-size-adjust: 100%;
-  overflow-x: hidden;
-  overflow-x: clip;                 /* 杜绝横向溢出（移动端缩放问题的根源） */
+  /* 注意：这里不能加 overflow-x: hidden/clip —— 会让文章目录的 position:sticky 失效 */
 }
 
 body {
@@ -45,7 +44,7 @@ body {
   font-family: var(--font-body);
   color: var(--ink);
   background: #14181f;
-  overflow-x: hidden;
+  /* 不要在此处加 overflow-x: hidden —— 会破坏目录的 position:sticky */
 }
 
 /* 首屏淡入 */
