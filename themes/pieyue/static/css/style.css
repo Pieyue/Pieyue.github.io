@@ -153,6 +153,7 @@ body.night.mode-thorough #wallpaper-layer video {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: background 0.2s;
+  white-space: nowrap;
 }
 .site-nav a:hover { background: rgba(255, 255, 255, 0.24); text-decoration: none; }
 
@@ -457,6 +458,28 @@ mark { background: rgba(255, 213, 79, 0.85); color: #1d2534; border-radius: 3px;
 }
 .toc-hint { font-size: 0.72rem; font-weight: 400; color: var(--ink-soft); letter-spacing: 0.02em; }
 
+/* 移动端目录悬浮按钮（桌面隐藏） */
+#toc-fab {
+  display: none;
+  position: fixed;
+  right: 16px;
+  bottom: 190px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  z-index: 58;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(135deg, #4f8cff, #7db4ff);
+  box-shadow: 0 6px 20px rgba(79, 140, 255, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+#toc-fab svg { width: 20px; height: 20px; }
+#toc-fab:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(79, 140, 255, 0.55); }
+
 #TableOfContents ul { list-style: none; margin: 0; padding: 0; }
 #TableOfContents > ul > li { margin: 2px 0; }
 #TableOfContents ul ul { margin-left: 14px; border-left: 1px solid rgba(127, 140, 170, 0.25); padding-left: 8px; overflow: hidden; }
@@ -638,7 +661,16 @@ body.night .post-item { background: rgba(255, 255, 255, 0.04); }
 .post-item-head { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
 .post-item-head h2 { margin: 0; font-size: 1.18rem; font-weight: 700; }
 .post-date { flex: none; color: var(--ink-soft); font-size: 0.84rem; }
-.post-item-summary { margin: 8px 0 0; color: var(--ink-soft); font-size: 0.93rem; line-height: 1.7; }
+.post-item-summary {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.93rem;
+  line-height: 1.7;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;      /* 摘要最多三行，超出省略 */
+  overflow: hidden;
+}
 .post-tags { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
 
 .pagination {
@@ -1086,20 +1118,40 @@ body.mode-thorough #btn-mode {
 
 @media (max-width: 960px) {
   .post-layout { grid-template-columns: 1fr; }
-  .toc-panel {
-    position: static;
-    max-height: none;
-    overflow: visible;
-    padding-bottom: 14px;
-  }
+  #toc-fab { display: grid; }
   .toc-hint { display: none; }
-  .toc-panel #TableOfContents { display: none; }
-  .toc-panel.open #TableOfContents { display: block; }
-  .toc-panel.open { max-height: 60vh; overflow: auto; }
+  /* 目录改为悬浮面板：点悬浮按钮弹出，点其它位置收起 */
+  .toc-panel {
+    position: fixed;
+    right: 16px;
+    bottom: 250px;
+    width: min(320px, calc(100vw - 32px));
+    max-height: min(56vh, 460px);
+    overflow-y: auto;
+    z-index: 58;
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .toc-panel.fab-open { opacity: 1; transform: none; pointer-events: auto; }
+}
+
+@media (max-width: 720px) {
+  /* 窄屏顶栏压缩：保证「主页/文章」等按钮文字横排 */
+  #topbar { padding: 0 10px; }
+  .topbar-left, .topbar-right { gap: 6px; }
+  .icon-btn { width: 34px; height: 34px; }
+  .icon-btn svg { width: 17px; height: 17px; }
+  .pill-btn { height: 34px; padding: 0 10px; font-size: 0.8rem; }
+  .pill-btn svg { width: 16px; height: 16px; }
+  .site-nav { gap: 4px; }
+  .site-nav a { padding: 5px 10px; font-size: 0.84rem; }
 }
 
 @media (max-width: 640px) {
   .page-card, .post { padding: 24px 20px; }
+  .post-body { font-size: 1.06rem; }   /* 移动端正文放大一号 */
   .hero-title { letter-spacing: 0.05em; }
   .hero-actions { gap: 12px; }
   .btn { padding: 12px 30px; }

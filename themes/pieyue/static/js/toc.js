@@ -4,11 +4,16 @@
 (() => {
   const { $, $$ } = window.PY;
 
+  let currentPanel = null;
+  let currentFab = null;
+  let docBound = false;
+
   window.PY.pageInits.push(() => {
     const panel = $('.toc-panel');
     const nav = $('#TableOfContents');
     if (!panel || !nav || nav.dataset.init === '1') return;
     nav.dataset.init = '1';
+    currentPanel = panel;
 
     /* 为带子列表的章节加折叠开关 */
     $$('li', nav).forEach((li) => {
@@ -26,10 +31,26 @@
       });
     });
 
-    /* 移动端：点击「目录」标题展开/收起 */
-    const head = $('.toc-head', panel);
-    if (head) {
-      head.addEventListener('click', () => panel.classList.toggle('open'));
+    /* 移动端：悬浮按钮开合；点其它位置或点目录内链接后收起 */
+    const fab = $('#toc-fab');
+    if (fab) {
+      currentFab = fab;
+      fab.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentPanel.classList.toggle('fab-open');
+      });
+      panel.addEventListener('click', (e) => {
+        if (e.target.closest('a') && innerWidth <= 960) panel.classList.remove('fab-open');
+      });
+      if (!docBound) {
+        docBound = true;
+        document.addEventListener('click', (e) => {
+          if (innerWidth <= 960 && currentPanel && currentPanel.classList.contains('fab-open') &&
+              !currentPanel.contains(e.target) && !(currentFab && currentFab.contains(e.target))) {
+            currentPanel.classList.remove('fab-open');
+          }
+        });
+      }
     }
 
     /* 滚动时高亮当前章节 */
