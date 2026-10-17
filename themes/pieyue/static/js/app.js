@@ -236,7 +236,7 @@
       'data-reactions-enabled': g.reactionsEnabled || '1',
       'data-emit-metadata': g.emitMetadata || '0',
       'data-input-position': g.inputPosition || 'top',
-      'data-theme': state.night ? 'transparent_dark' : 'noborder_light',
+      'data-theme': state.night ? 'dark' : 'light',
       'data-lang': g.lang || 'zh-CN',
       'data-loading': g.loading || 'lazy',
     };

@@ -98,7 +98,7 @@
     /* 已挂载的 Giscus 主题跟随切换 */
     const frame = document.querySelector('iframe.giscus-frame');
     if (frame && frame.contentWindow) {
-      frame.contentWindow.postMessage({ giscus: { setConfig: { theme: state.night ? 'transparent_dark' : 'noborder_light' } } }, 'https://giscus.app');
+      frame.contentWindow.postMessage({ giscus: { setConfig: { theme: state.night ? 'dark' : 'light' } } }, 'https://giscus.app');
     }
   }
   applyNight();

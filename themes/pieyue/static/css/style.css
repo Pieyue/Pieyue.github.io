@@ -683,7 +683,8 @@ body.night .post-body code { background: rgba(255, 255, 255, 0.1); }
   font-size: 0.865rem;
   line-height: 1.65;
 }
-.highlight pre code { background: none; padding: 0; font-size: inherit; }
+/* 行内代码（含夜间规则）不能影响代码块：提高选择器优先级 */
+.post-body .highlight pre code { background: none; padding: 0; font-size: inherit; }
 
 /* 代码块滚动条：与深色代码主题匹配 */
 .highlight pre {
@@ -809,6 +810,20 @@ body.night .post-item { background: rgba(255, 255, 255, 0.04); }
 /* 评论区 */
 .comments { margin-top: 34px; padding-top: 6px; border-top: 1px solid rgba(127, 140, 170, 0.22); }
 .comments h2 { font-size: 1.2rem; letter-spacing: 0.1em; }
+/* Giscus 外层画一圈可见线框（控件自身不画边框），并保证 iframe 铺满不裁切 */
+#giscus-container {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid rgba(127, 140, 170, 0.32);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.3);
+}
+#giscus-container iframe { display: block; width: 100% !important; }
+body.night #giscus-container {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.05);
+}
 .giscus-hint {
   padding: 16px 18px;
   border: 1px dashed rgba(127, 140, 170, 0.45);
