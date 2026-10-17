@@ -226,6 +226,21 @@
   state.weather = null;          // { place, current:{...}, days:[...] } 或 { failed: true }
   state.weatherEffect = null;    // 'rain' | 'snow' | 'hail' | null
 
+  /* 中文地名 → 坐标：按传入顺序从末位（区）到首位（省）逐级尝试 */
+  async function geocodeByName(names, place) {
+    const uniq = names.filter(Boolean).filter((v, i, a) => a.indexOf(v) === i);
+    for (const name of [...uniq].reverse()) {
+      const g = await fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(name) + '&count=1&language=zh&format=json', { cache: 'no-store' });
+      if (!g.ok) continue;
+      const gj = await g.json();
+      const hit = gj.results && gj.results[0];
+      if (hit && Number.isFinite(hit.latitude)) {
+        return { lat: hit.latitude, lon: hit.longitude, place: place || uniq.join(' · ') };
+      }
+    }
+    throw new Error('地名未匹配到坐标');
+  }
+
   async function getGeo() {
     let coordsOnly = null;
     const sources = [
@@ -243,18 +258,20 @@
         if (tokens.length > 1) tokens.pop();          // 末位是运营商
         const uniq = [];
         tokens.forEach((t) => { if (t && t !== uniq[uniq.length - 1]) uniq.push(t); });
-        const place = uniq.join(' · ');
-        /* 地名 → 坐标：区 → 市 → 省逐级尝试 */
-        for (const name of [...uniq].reverse()) {
-          const g = await fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(name) + '&count=1&language=zh&format=json', { cache: 'no-store' });
-          if (!g.ok) continue;
-          const gj = await g.json();
-          const hit = gj.results && gj.results[0];
-          if (hit && Number.isFinite(hit.latitude)) {
-            return { lat: hit.latitude, lon: hit.longitude, place };
-          }
-        }
-        throw new Error('ip138 地名未匹配到坐标');
+        return geocodeByName(uniq, uniq.join(' · '));
+      },
+      async () => {
+        /* myip.ipip.net：纯文本「当前 IP：x  来自于：国家 省 市 区 运营商」 */
+        const r = await fetch('https://myip.ipip.net/', { cache: 'no-store' });
+        if (!r.ok) throw new Error('ipip ' + r.status);
+        const text = (await r.text()).trim();
+        const m = text.match(/来自于[：:]\s*(.+)$/);
+        if (!m) throw new Error('ipip 响应格式未知');
+        const tokens = m[1].trim().split(/\s+/).filter(Boolean);
+        if (tokens[0] === '中国') tokens.shift();
+        if (tokens.length > 1) tokens.pop();          // 末位是运营商
+        if (!tokens.length) throw new Error('ipip 未返回地名');
+        return geocodeByName(tokens, tokens.filter((v, i, a) => a.indexOf(v) === i).join(' · '));
       },
       async () => {
         const r = await fetch('https://ipwho.is/', { cache: 'no-store' });
