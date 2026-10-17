@@ -437,6 +437,14 @@ mark { background: rgba(255, 213, 79, 0.85); color: #1d2534; border-radius: 3px;
   align-items: start;
 }
 
+/* 无目录的文章：单栏居中，保持舒适阅读宽度 */
+.post-layout.no-toc { grid-template-columns: minmax(0, 1fr); }
+.post-layout.no-toc .post {
+  width: 100%;
+  max-width: 900px;
+  justify-self: center;
+}
+
 /* ==========================================================================
    目录（左窄栏，可折叠）
    ========================================================================== */
@@ -567,6 +575,66 @@ mark { background: rgba(255, 213, 79, 0.85); color: #1d2534; border-radius: 3px;
 .post-body ul, .post-body ol { padding-left: 1.6em; margin: 0.8em 0; }
 .post-body li { margin: 0.35em 0; }
 .post-body img { max-width: 100%; border-radius: 12px; }
+
+/* 图片可点击放大 */
+.post-body img.zoomable {
+  cursor: zoom-in;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+}
+.post-body img.zoomable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(10, 15, 30, 0.3);
+  filter: brightness(1.04);
+}
+
+/* 放大查看遮罩 */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 4vh 4vw;
+  background: rgba(8, 11, 18, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  cursor: zoom-out;
+}
+.lightbox.show { opacity: 1; }
+/* [hidden] 必须能真正移除元素：类选择器 .lightbox 的 display 会覆盖浏览器默认的 [hidden] */
+.lightbox[hidden] { display: none; }
+/* 淡出过程中不再拦截点击 */
+.lightbox:not(.show) { pointer-events: none; }
+.lightbox-img {
+  max-width: 100%;
+  max-height: 92vh;
+  border-radius: 10px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
+  transform: scale(0.96);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: default;
+}
+.lightbox.show .lightbox-img { transform: scale(1); }
+.lightbox-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.lightbox-close:hover { background: rgba(255, 255, 255, 0.28); }
+.lightbox-close svg { width: 20px; height: 20px; }
+body.lightbox-open { overflow: hidden; }
 .post-body hr { border: none; border-top: 1px solid rgba(127, 140, 170, 0.3); margin: 2em 0; }
 .post-body blockquote {
   margin: 1.2em 0;
@@ -626,6 +694,32 @@ body.night .post-body code { background: rgba(255, 255, 255, 0.1); }
 .highlight pre::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.04); }
 .highlight pre::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 999px; }
 .highlight pre::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.35); }
+
+/* Chroma 语法高亮：github-dark 基底，并为内置函数/函数名/常量/装饰器补色 */
+.chroma { color: #e6edf3; }
+.chroma .err { color: #f85149; }
+.chroma .c, .chroma .c1, .chroma .ch, .chroma .cm, .chroma .cs,
+.chroma .cd, .chroma .cp, .chroma .cpf { color: #8b949e; font-style: italic; }
+.chroma .k, .chroma .kn, .chroma .kp, .chroma .kr, .chroma .kt, .chroma .kv { color: #ff7b72; }
+.chroma .kc { color: #79c0ff; }               /* True / False / None */
+.chroma .o, .chroma .ow { color: #ff7b72; }   /* 运算符 */
+.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh,
+.chroma .mi, .chroma .il, .chroma .mo, .chroma .mx { color: #79c0ff; }
+.chroma .s, .chroma .sa, .chroma .sb, .chroma .sc, .chroma .dl,
+.chroma .sd, .chroma .s2, .chroma .se, .chroma .sh, .chroma .si,
+.chroma .sx, .chroma .sr, .chroma .s1, .chroma .ss { color: #a5d6ff; }
+.chroma .na { color: #79c0ff; }               /* 属性 */
+.chroma .nb { color: #f2cc60; }               /* 内置函数：print / len / echo / sudo */
+.chroma .nf, .chroma .fm { color: #d2a8ff; }  /* 函数名 */
+.chroma .nc { color: #f0883e; }               /* 类名 */
+.chroma .nd { color: #d2a8ff; }               /* 装饰器 */
+.chroma .ne { color: #f85149; }               /* 异常 */
+.chroma .nn { color: #f0883e; }               /* 命名空间 */
+.chroma .nt { color: #7ee787; }               /* 标签 */
+.chroma .no { color: #79c0ff; }               /* 常量 */
+.chroma .nv, .chroma .l, .chroma .ld { color: #ffa657; }  /* 变量（如 $PATH） */
+.chroma .py { color: #79c0ff; }               /* 属性 */
+.chroma .w { color: #6e7681; }
 
 /* 代码块顶部工具条：语言名 + 复制图标（CSDN 风格） */
 .code-header {

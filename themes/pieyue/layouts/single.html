@@ -1,7 +1,8 @@
 {{ define "main" }}
-<div class="content-wrap post-layout">
-  {{ $toc := .TableOfContents }}
-  {{ if findRE `<a href` $toc }}
+{{ $toc := .TableOfContents }}
+{{ $hasToc := findRE `<a href` $toc }}
+<div class="content-wrap post-layout{{ if not $hasToc }} no-toc{{ end }}">
+  {{ if $hasToc }}
   <aside class="toc-panel acrylic">
     <div class="toc-head"><span>目录</span><span class="toc-hint">点击章节名可折叠</span></div>
     {{ $toc | safeHTML }}

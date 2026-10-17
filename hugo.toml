@@ -14,7 +14,7 @@ summaryLength = 40
 
 [markup]
   [markup.highlight]
-    noClasses = true
+    noClasses = false
     style = 'github-dark'
     lineNos = false
   [markup.goldmark]
