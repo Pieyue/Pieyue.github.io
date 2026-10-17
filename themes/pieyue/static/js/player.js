@@ -193,6 +193,14 @@
     player.addEventListener('focusin', () => player.classList.add('open'));
     player.addEventListener('focusout', () => { if (!player.contains(document.activeElement)) player.classList.remove('open'); });
   }
+  /* 触屏设备：热区已禁用，点击露出的边缘条打开播放器 */
+  if (player) {
+    player.addEventListener('click', (e) => {
+      if (player.classList.contains('open')) return;
+      if (e.target.closest('button, input, #playlist')) return;
+      player.classList.add('open');
+    });
+  }
 
   /* ---------- 模式切换联动 ---------- */
   on('modeChanged', (m) => {
