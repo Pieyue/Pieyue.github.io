@@ -1,0 +1,128 @@
+# ============================================================
+# 博客素材清单
+# - 音乐/壁纸文件放在 static/ 下，这里只登记元信息
+# - 新增歌曲或壁纸时照抄一段即可，文件名建议保持英文
+# - normal_music / normal_wallpapers  : 正常模式（随机配对，列表循环）
+# - thorough_pairs                    : 通透模式（音乐与壁纸一一配对，单曲循环）
+# ============================================================
+
+[[normal_music]]
+title = "RADWIMPS - 御宅訪問"
+src = "/music/normal/n01.mp3"
+
+[[normal_music]]
+title = "RADWIMPS - 晴れゆく空"
+src = "/music/normal/n02.mp3"
+
+[[normal_music]]
+title = "RADWIMPS - 愛にできることはまだあるかい (Movie edit)"
+src = "/music/normal/n03.mp3"
+
+[[normal_music]]
+title = "RADWIMPS - 花火大会"
+src = "/music/normal/n04.mp3"
+
+[[normal_music]]
+title = "TypeD - 天气之子·幻"
+src = "/music/normal/n05.mp3"
+
+[[normal_music]]
+title = "YOASOBI - 群青"
+src = "/music/normal/n06.mp3"
+
+[[normal_music]]
+title = "初の晴れ女バイト - RADWIMPS"
+src = "/music/normal/n07.mp3"
+
+[[normal_music]]
+title = "グランドエスケープ(逃离地面) - RADWIMPS"
+src = "/music/normal/n08.mp3"
+
+# ---- 正常模式壁纸（图片 + 视频） ----
+
+[[normal_wallpapers]]
+title = "天气之子 · 晴"
+src = "/wallpapers/normal/w01.jpg"
+type = "image"
+
+[[normal_wallpapers]]
+title = "Weathering with You"
+src = "/wallpapers/normal/w02.mp4"
+type = "video"
+
+[[normal_wallpapers]]
+title = "天气之子 · 鸟居"
+src = "/wallpapers/normal/w03.mp4"
+type = "video"
+
+[[normal_wallpapers]]
+title = "Tenkinoko 天气之子"
+src = "/wallpapers/normal/w04.mp4"
+type = "video"
+
+[[normal_wallpapers]]
+title = "The Cloud Scenery 2 (4K)"
+src = "/wallpapers/normal/w05.mp4"
+type = "video"
+
+[[normal_wallpapers]]
+title = "Weathering With You"
+src = "/wallpapers/normal/w06.mp4"
+type = "video"
+
+[[normal_wallpapers]]
+title = "云上风景"
+src = "/wallpapers/normal/w07.jpg"
+type = "image"
+
+[[normal_wallpapers]]
+title = "天气之子 · 鸟居（插画）"
+src = "/wallpapers/normal/w08.jpg"
+type = "image"
+
+# ---- 通透模式：音乐与壁纸配对（同一对索引必须对应） ----
+
+[[thorough_pairs]]
+title = "一分钱(司凤版)"
+music = "/music/thorough/t01.mp3"
+wallpaper = "/wallpapers/thorough/p01.png"
+
+[[thorough_pairs]]
+title = "丢手绢(司凤版)"
+music = "/music/thorough/t02.mp3"
+wallpaper = "/wallpapers/thorough/p02.avif"
+
+[[thorough_pairs]]
+title = "司凤的酒"
+music = "/music/thorough/t03.mp3"
+wallpaper = "/wallpapers/thorough/p04.jpg"
+
+[[thorough_pairs]]
+title = "大家一起司凤凤"
+music = "/music/thorough/t04.mp3"
+wallpaper = "/wallpapers/thorough/p03.jpg"
+
+[[thorough_pairs]]
+title = "粉刷匠(司凤版)"
+music = "/music/thorough/t05.mp3"
+wallpaper = "/wallpapers/thorough/p05.jpeg"
+
+[[thorough_pairs]]
+title = "蜜雪冰城(司凤版)"
+music = "/music/thorough/t06.mp3"
+wallpaper = "/wallpapers/thorough/p06.png"
+
+[[thorough_pairs]]
+title = "通天大道宽又阔(司凤版)"
+music = "/music/thorough/t07.mp3"
+wallpaper = "/wallpapers/thorough/p07.jpg"
+
+[[thorough_pairs]]
+title = "闹吃VS古振兴"
+music = "/music/thorough/t08.mp3"
+wallpaper = "/wallpapers/thorough/p08.jpg"
+
+[[thorough_pairs]]
+title = "雨爱(司凤版)"
+music = "/music/thorough/t09.mp3"
+wallpaper = "/wallpapers/thorough/p09.jpg"

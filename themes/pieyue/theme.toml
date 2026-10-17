@@ -1,0 +1,10 @@
+name = "pieyue"
+license = "MIT"
+licenselink = ""
+description = "Pieyue 的个人博客主题：正常/通透双模式、跨页背景音乐、下雨特效、亚克力内容层"
+tags = ["blog", "music", "personal"]
+min_version = "0.146.0"
+
+[author]
+name = "Pieyue"
+homepage = "https://github.com/Pieyue"

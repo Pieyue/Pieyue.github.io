@@ -1,0 +1,39 @@
+<div id="player-hotzone" aria-hidden="true"></div>
+<aside id="player" aria-label="音乐播放器">
+  <div class="player-grip" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="player-body">
+    <div class="player-title-row">
+      <span id="player-title">即将开始播放…</span>
+      <button id="btn-playlist" class="p-btn" title="播放列表" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="13" y2="18"/>
+          <circle cx="17.5" cy="17.5" r="2.5"/>
+        </svg>
+      </button>
+    </div>
+    <div class="player-progress">
+      <span id="t-cur">0:00</span>
+      <div id="progress-bar" title="调整进度"><div id="progress-fill"></div></div>
+      <span id="t-total">0:00</span>
+    </div>
+    <div class="player-controls">
+      <button id="p-prev" class="p-btn" title="上一首">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14l-11-7z"/></svg>
+      </button>
+      <button id="p-play" class="p-btn big" title="播放 / 暂停">
+        <svg class="ic-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+      </button>
+      <button id="p-next" class="p-btn" title="下一首">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg>
+      </button>
+      <div class="volume-wrap" title="音量">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 5 6 9H2v6h4l5 4z" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/>
+        </svg>
+        <input id="volume" type="range" min="0" max="100" value="70" aria-label="音量">
+      </div>
+    </div>
+    <ul id="playlist" hidden></ul>
+  </div>
+</aside>

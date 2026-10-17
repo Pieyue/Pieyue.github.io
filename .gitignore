@@ -1,0 +1,11 @@
+# Hugo 构建产物
+public/
+resources/
+.hugo_build.lock
+
+# 本地工具
+.mimosa/
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db

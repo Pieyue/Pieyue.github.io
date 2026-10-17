@@ -1,0 +1,35 @@
+{{ define "main" }}
+<div class="content-wrap">
+  <div class="acrylic page-card">
+    <header class="page-head">
+      <h1>{{ .Title }}</h1>
+      {{ with .Description }}<p class="page-desc">{{ . }}</p>{{ end }}
+    </header>
+
+    <ul class="post-list">
+      {{ range .Paginator.Pages }}
+      <li>
+        <a class="post-item" href="{{ .RelPermalink }}">
+          <div class="post-item-head">
+            <h2>{{ .Title }}</h2>
+            <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
+          </div>
+          <p class="post-item-summary">{{ .Summary | plainify | chomp }}</p>
+          {{ with .GetTerms "tags" }}
+          <div class="post-tags">{{ range . }}<span class="tag"># {{ .LinkTitle }}</span>{{ end }}</div>
+          {{ end }}
+        </a>
+      </li>
+      {{ end }}
+    </ul>
+
+    {{ with .Paginator }}
+    <nav class="pagination">
+      {{ if .HasPrev }}<a href="{{ .Prev.URL }}">← 上一页</a>{{ end }}
+      <span class="page-indicator">第 {{ .PageNumber }} / {{ .TotalPages }} 页</span>
+      {{ if .HasNext }}<a href="{{ .Next.URL }}">下一页 →</a>{{ end }}
+    </nav>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

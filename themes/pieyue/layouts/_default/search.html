@@ -1,0 +1,16 @@
+{{ define "main" }}
+<div class="content-wrap">
+  <div class="acrylic page-card search-page">
+    <h1>搜索</h1>
+    <form id="page-search" class="page-search-form" action="{{ "search/" | relURL }}" method="get" role="search">
+      <input type="search" name="q" placeholder="输入关键词，如：hugo、装饰器、git……" autocomplete="off" aria-label="搜索文章">
+      <button type="submit" aria-label="搜索">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/>
+        </svg>
+      </button>
+    </form>
+    <div id="search-results" class="search-results"><p class="muted">输入关键词，搜索全部文章…</p></div>
+  </div>
+</div>
+{{ end }}

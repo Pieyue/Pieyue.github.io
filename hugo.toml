@@ -1,0 +1,43 @@
+baseURL = 'https://Pieyue.github.io/'
+locale = 'zh-CN'
+defaultContentLanguage = 'zh'
+title = 'Pieyue的个人博客'
+theme = 'pieyue'
+enableRobotsTXT = true
+summaryLength = 40
+
+[pagination]
+  pagerSize = 10
+
+[outputs]
+  home = ['HTML', 'RSS', 'JSON']
+
+[markup]
+  [markup.highlight]
+    noClasses = true
+    style = 'github-dark'
+    lineNos = false
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+
+[params]
+  github = 'https://github.com/Pieyue'
+  description = 'Pieyue 的技术学习笔记与个人总结'
+
+  # 评论区（Giscus）：以下参数已在 https://giscus.app/zh-CN 生成
+  [params.giscus]
+    repo = 'Pieyue/Pieyue.github.io'
+    repoId = 'R_kgDOU_fTXQ'
+    category = 'Announcements'
+    categoryId = 'DIC_kwDOU_fTXc4DIgel'
+    mapping = 'pathname'
+    strict = '0'
+    reactionsEnabled = '1'
+    emitMetadata = '1'
+    inputPosition = 'top'
+    lang = 'zh-CN'
+    loading = 'lazy'
