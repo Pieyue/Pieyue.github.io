@@ -15,19 +15,26 @@
     nav.dataset.init = '1';
     currentPanel = panel;
 
-    /* 为带子列表的章节加折叠开关 */
+    /* 为带子列表的章节加折叠开关（子列表包一层 .toc-sub 以实现高度过渡） */
     $$('li', nav).forEach((li) => {
       const sub = li.querySelector(':scope > ul');
       if (!sub) return;
+      const wrap = document.createElement('div');
+      wrap.className = 'toc-sub';
+      li.insertBefore(wrap, sub);
+      wrap.appendChild(sub);
+
       const btn = document.createElement('button');
       btn.className = 'toc-toggle';
       btn.type = 'button';
       btn.setAttribute('aria-label', '折叠/展开章节');
+      btn.setAttribute('aria-expanded', 'true');
       btn.textContent = '▾';
       li.insertBefore(btn, li.firstChild);
       btn.addEventListener('click', () => {
-        li.classList.toggle('collapsed');
-        btn.textContent = li.classList.contains('collapsed') ? '▸' : '▾';
+        const collapsed = li.classList.toggle('collapsed');
+        btn.textContent = collapsed ? '▸' : '▾';
+        btn.setAttribute('aria-expanded', String(!collapsed));
       });
     });
 
