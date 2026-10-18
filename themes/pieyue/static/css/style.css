@@ -154,13 +154,12 @@ body.night.mode-thorough #wallpaper-layer video {
   font-size: 0.92rem;
   padding: 6px 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  /* 不用 backdrop-filter：相邻毛玻璃元素重绘时会出现合成接缝（竖线伪影） */
+  background: rgba(255, 255, 255, 0.16);
   transition: background 0.2s;
   white-space: nowrap;
 }
-.site-nav a:hover { background: rgba(255, 255, 255, 0.24); text-decoration: none; }
+.site-nav a:hover { background: rgba(255, 255, 255, 0.3); text-decoration: none; }
 
 .icon-btn, .pill-btn {
   position: relative;
@@ -170,17 +169,16 @@ body.night.mode-thorough #wallpaper-layer video {
   gap: 7px;
   height: 38px;
   color: #fff;
-  background: rgba(255, 255, 255, 0.14);
+  /* 同上：顶栏小控件不使用 backdrop-filter，避免悬停时的合成接缝 */
+  background: rgba(255, 255, 255, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 999px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 .icon-btn { width: 38px; }
 .icon-btn svg { width: 19px; height: 19px; }
 .icon-btn:hover, .pill-btn:hover {
-  background: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.32);
   transform: translateY(-1px);
 }
 
@@ -454,7 +452,7 @@ mark { background: rgba(255, 213, 79, 0.85); color: #1d2534; border-radius: 3px;
   top: calc(var(--topbar-h) + 18px);
   max-height: calc(100vh - var(--topbar-h) - 40px);
   overflow: auto;
-  padding: 18px 16px 20px;
+  padding: 18px 16px 20px 26px;   /* 左侧留出折叠按钮的空间 */
   font-size: 0.92rem;
   scrollbar-width: thin;
 }
@@ -502,7 +500,23 @@ mark { background: rgba(255, 213, 79, 0.85); color: #1d2534; border-radius: 3px;
 
 #TableOfContents ul { list-style: none; margin: 0; padding: 0; }
 #TableOfContents > ul > li { margin: 2px 0; }
-#TableOfContents ul ul { margin-left: 14px; border-left: 1px solid rgba(127, 140, 170, 0.25); padding-left: 8px; overflow: hidden; }
+#TableOfContents ul ul { margin-left: 14px; border-left: 1px solid rgba(127, 140, 170, 0.25); padding-left: 8px; }
+
+/* 子章节展开/收起动画：grid 行高 1fr ↔ 0fr（JS 会把子列表包进 .toc-sub） */
+.toc-sub {
+  display: grid;
+  grid-template-rows: 1fr;
+  overflow: hidden;
+  margin-left: -22px;   /* 向左扩出 22px 容纳折叠按钮，避免被裁剪 */
+  padding-left: 22px;
+  opacity: 1;
+  transition: grid-template-rows 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease;
+}
+.toc-sub > ul { min-height: 0; }
+#TableOfContents li.collapsed > .toc-sub {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
 #TableOfContents a {
   display: block;
   padding: 5px 6px;
@@ -530,7 +544,7 @@ mark { background: rgba(255, 213, 79, 0.85); color: #1d2534; border-radius: 3px;
 }
 .toc-toggle:hover { background: rgba(79, 140, 255, 0.25); color: var(--accent); }
 #TableOfContents li { position: relative; }
-#TableOfContents li.collapsed > ul { display: none; }
+/* 收起状态由 .toc-sub 的 grid 行高过渡处理，此处不再用 display:none */
 
 /* ==========================================================================
    文章正文
@@ -760,7 +774,9 @@ body.night .post-body code { background: rgba(255, 255, 255, 0.1); }
 /* 文章列表卡片 */
 .post-list { list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
 .post-item {
-  display: block;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
   padding: 20px 22px;
   border-radius: 14px;
   border: 1px solid rgba(127, 140, 170, 0.2);
@@ -768,6 +784,28 @@ body.night .post-body code { background: rgba(255, 255, 255, 0.1); }
   color: inherit;
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
 }
+/* 有配图的文章：左侧「缩略图 + 标签」栏 */
+.post-aside {
+  flex: none;
+  width: 168px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.post-thumb {
+  width: 100%;
+  height: 112px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(127, 140, 170, 0.14);
+  box-shadow: 0 2px 10px rgba(10, 15, 30, 0.16);
+}
+body.night .post-thumb { background: rgba(255, 255, 255, 0.08); }
+.post-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.post-aside .post-tags { display: none; margin-top: 0; gap: 6px; }   /* 桌面端标签保持在正文 */
+.post-aside .tag { font-size: 0.72rem; padding: 1px 7px; }
+.post-item-body { flex: 1; min-width: 0; }
 body.night .post-item { background: rgba(255, 255, 255, 0.04); }
 .post-item:hover {
   text-decoration: none;
@@ -1298,6 +1336,18 @@ body.mode-thorough #btn-mode {
   .page-card, .post { padding: 24px 20px; }
   .post-body { font-size: 1.06rem; }   /* 移动端正文放大一号 */
   .post-body pre, .post-body img, .post-body table, .post-body iframe { max-width: 100%; }
+  .post-item { gap: 12px; padding: 16px; }
+  .post-aside { width: 88px; gap: 6px; }
+  .post-thumb { height: 88px; }
+  /* 移动端：标签显示在图片下方，正文内不再重复 */
+  .post-aside .post-tags { display: flex; }
+  .post-item.has-thumb .post-item-body .post-tags { display: none; }
+  .post-aside .tag { font-size: 0.66rem; padding: 0 5px; }
+  .post-item-summary { font-size: 0.88rem; }
+  /* 窄屏：标题独占一行，避免与日期挤在同一行导致溢出 */
+  .post-item-head { flex-wrap: wrap; row-gap: 2px; }
+  .post-item-head h2 { flex: 1 1 100%; font-size: 1.06rem; line-height: 1.4; }
+  .post-date { font-size: 0.78rem; }
   .hero-title { letter-spacing: 0.05em; }
   .hero-actions { gap: 12px; }
   .btn { padding: 12px 30px; }

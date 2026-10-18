@@ -8,16 +8,31 @@
 
     <ul class="post-list">
       {{ range .Paginator.Pages }}
+      {{- $thumb := "" -}}
+      {{- with findRESubmatch `<img[^>]+src="([^"]+)"` .Content 1 -}}
+        {{- $thumb = index (index . 0) 1 -}}
+      {{- end -}}
+      {{- $tags := .GetTerms "tags" -}}
       <li>
-        <a class="post-item" href="{{ .RelPermalink }}">
-          <div class="post-item-head">
-            <h2>{{ .Title }}</h2>
-            <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
+        <a class="post-item{{ if $thumb }} has-thumb{{ end }}" href="{{ .RelPermalink }}">
+          {{ if $thumb }}
+          <div class="post-aside">
+            <div class="post-thumb"><img src="{{ $thumb }}" alt="" loading="lazy" decoding="async"></div>
+            {{ with $tags }}
+            <div class="post-tags">{{ range . }}<span class="tag"># {{ .LinkTitle }}</span>{{ end }}</div>
+            {{ end }}
           </div>
-          <p class="post-item-summary">{{ .Summary | plainify | chomp }}</p>
-          {{ with .GetTerms "tags" }}
-          <div class="post-tags">{{ range . }}<span class="tag"># {{ .LinkTitle }}</span>{{ end }}</div>
           {{ end }}
+          <div class="post-item-body">
+            <div class="post-item-head">
+              <h2>{{ .Title }}</h2>
+              <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
+            </div>
+            <p class="post-item-summary">{{ .Summary | plainify | chomp }}</p>
+            {{ with $tags }}
+            <div class="post-tags">{{ range . }}<span class="tag"># {{ .LinkTitle }}</span>{{ end }}</div>
+            {{ end }}
+          </div>
         </a>
       </li>
       {{ end }}
