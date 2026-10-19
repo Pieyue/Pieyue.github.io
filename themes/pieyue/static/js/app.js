@@ -78,6 +78,8 @@
 
     const doSwap = () => {
       const target = new URL(url, location.href);
+      /* 先更新 URL：页面初始化（如搜索页读取 location.search）必须看到新地址 */
+      if (push) history.pushState({}, '', target.href);
       renderedUrl = target.pathname + target.search;
       $('#app-main').innerHTML = nextMain.innerHTML;
       document.title = doc.title;
@@ -98,7 +100,6 @@
       doSwap();
       requestAnimationFrame(() => main.classList.remove('swap-fade'));
     }
-    if (push) history.pushState({}, '', url);
   }
 
   function navigate(url) {
