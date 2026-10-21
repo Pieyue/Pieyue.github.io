@@ -714,7 +714,10 @@ body.night .post-body code { background: rgba(255, 255, 255, 0.1); }
 .chroma { color: #e6edf3; }
 .chroma .err { color: #f85149; }
 .chroma .c, .chroma .c1, .chroma .ch, .chroma .cm, .chroma .cs,
-.chroma .cd, .chroma .cp, .chroma .cpf { color: #8b949e; font-style: italic; }
+.chroma .cd { color: #8b949e; font-style: italic; }
+/* 预处理指令（C 的 #include/#define）与头文件：不能按注释渲染 */
+.chroma .cp { color: #ff7b72; font-style: normal; }
+.chroma .cpf { color: #a5d6ff; font-style: normal; }
 .chroma .k, .chroma .kn, .chroma .kp, .chroma .kr, .chroma .kt, .chroma .kv { color: #ff7b72; }
 .chroma .kc { color: #79c0ff; }               /* True / False / None */
 .chroma .o, .chroma .ow { color: #ff7b72; }   /* 运算符 */
