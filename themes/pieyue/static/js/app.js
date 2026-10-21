@@ -164,6 +164,25 @@
   /* 代码块：语言标识 + 复制按钮 */
   function initCodeCopy() {
     $$('.highlight').forEach((hl) => {
+      /* C/C++ 预处理行中，Chroma 会把 `#include <...>` 后面的注释并进 .cpf token，
+         这里把注释部分拆出来，恢复注释样式 */
+      $$('.chroma .cpf', hl).forEach((el) => {
+        if (el.dataset.split === '1') return;
+        const text = el.textContent;
+        const iLine = text.indexOf('//');
+        const iBlock = text.indexOf('/*');
+        let idx = -1;
+        let cls = 'c1';
+        if (iLine >= 0 && (iBlock < 0 || iLine < iBlock)) { idx = iLine; cls = 'c1'; }
+        else if (iBlock >= 0) { idx = iBlock; cls = 'cm'; }
+        if (idx <= 0) return;
+        el.dataset.split = '1';
+        el.textContent = text.slice(0, idx);
+        const span = document.createElement('span');
+        span.className = cls;
+        span.textContent = text.slice(idx);
+        el.after(span);
+      });
       if (hl.querySelector('.code-header')) return;
       const codeEl = hl.querySelector('pre code');
       const lang = codeEl ? (codeEl.getAttribute('data-lang') || ((codeEl.className.match(/language-([\w+#.-]+)/) || [])[1])) : '';

