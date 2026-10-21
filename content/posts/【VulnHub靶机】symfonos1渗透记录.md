@@ -2,6 +2,7 @@
 date = '2026-10-20T19:42:34+08:00'
 draft = false
 title = '【VulnHub靶机】symfonos1渗透记录'
+tags = ['渗透','vulnhub','靶机']
 +++
 
 ## 信息收集
@@ -195,6 +196,8 @@ Task Completed
 
 ## 漏洞利用
 
+### smb服务匿名共享+helios弱口令
+
 因为445运行着smb服务, 所以尝试用smbclient匿名列出共享资源
 
 ```shell
@@ -289,6 +292,8 @@ Helios (also Helius) was the god of the Sun in Greek mythology. He was thought t
 2. Dance
 3. Work on /h3l105
 ```
+
+### Web漏洞利用-Mail Masta文件包含漏洞
 
 浏览器访问http://192.168.200.160/h3l105, 发现是个WordPress站点
 
