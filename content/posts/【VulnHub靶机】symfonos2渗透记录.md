@@ -2,7 +2,7 @@
 date = '2026-10-21T20:12:11+08:00'
 draft = false
 title = '【VulnHub靶机】symfonos2渗透记录'
-tags = ['渗透','vulnhub','靶机']
+tags = ['渗透','vulnhub','mysql','密码爆破','FTP','SMB','LibreNMS']
 +++
 
 ## 信息搜集
@@ -465,8 +465,8 @@ ssh -L 8080:127.0.0.1:8080 aeolus@192.168.200.161
 msf > search LibreNMS
 Matching Modules
 ================
-   #  Name                                                          Disclosure Date  Rank       Check  Description                         
-   -  ----                                                          ---------------  ----       -----  -----------                         
+   #  Name                                                          Disclosure Date  Rank       Check  Description
+   -  ----                                                          ---------------  ----       -----  -----------
    0  exploit/linux/http/librenms_authenticated_rce_cve_2024_51092  2024-11-15       excellent  Yes    LibreNMS Authenticated RCE (CVE-2024-51092)
    1  exploit/linux/http/librenms_collectd_cmd_inject               2019-07-15       excellent  Yes    LibreNMS Collectd Command Injection 
    2  exploit/linux/http/librenms_addhost_cmd_inject                2018-12-16       excellent  No     LibreNMS addhost Command Injection  
