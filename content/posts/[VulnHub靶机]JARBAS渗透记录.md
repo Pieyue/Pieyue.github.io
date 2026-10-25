@@ -172,7 +172,7 @@ Task Completed
 
 使用[somd5](https://www.somd5.com/)进行解密, 得到3个凭据  
 tiago: italia99  
-trindade: marianna
+trindade: marianna  
 eder: vipsu
 
 ![](https://cdn.jsdelivr.net/gh/Pieyue/blog_images@main/%E9%9D%B6%E6%9C%BA/Jarbas/%E8%A7%A3%E5%AF%86tiago.avif)
