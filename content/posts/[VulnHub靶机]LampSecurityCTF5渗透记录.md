@@ -1,7 +1,8 @@
 +++
 date = '2026-10-29T20:47:09+08:00'
-draft = true
+draft = false
 title = '[VulnHub靶机]LampSecurityCTF5渗透记录'
+tags = ['渗透','Vulnhub','NanoCMS','LFI']
 +++
 
 ## 信息搜集
