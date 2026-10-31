@@ -38,6 +38,10 @@ src = "/music/normal/n07.mp3"
 title = "グランドエスケープ(逃离地面) - RADWIMPS"
 src = "/music/normal/n08.mp3"
 
+[[normal_music]]
+title = "Daoko & 米津玄師 - 打上花火"
+src = "/music/normal/n09.mp3"
+
 # ---- 正常模式壁纸（图片 + 视频） ----
 
 [[normal_wallpapers]]
@@ -121,3 +125,13 @@ wallpaper = "/wallpapers/thorough/p08.jpg"
 title = "雨爱(司凤版)"
 music = "/music/thorough/t09.mp3"
 wallpaper = "/wallpapers/thorough/p09.jpg"
+
+[[thorough_pairs]]
+title = "如果可以(司风版)"
+music = "/music/thorough/t10.mp3"
+wallpaper = "/wallpapers/thorough/p11.jpg"
+
+[[thorough_pairs]]
+title = "生日快乐(司凤版)"
+music = "/music/thorough/t11.mp3"
+wallpaper = "/wallpapers/thorough/p12.jpg"
