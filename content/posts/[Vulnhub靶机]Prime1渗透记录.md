@@ -362,7 +362,7 @@ drwxr-xr-x  2 root   root   4096 Aug 31  2019 saket
 drwxr-x--x 20 victor victor 4096 Sep  1  2019 victor
 ```
 
-仅如saket, 发现有三个文件, 其中password.txt是之前通过文件包含读取到的密码
+进入saket, 发现有三个文件, 其中password.txt是之前通过文件包含读取到的密码
 
 ```shell
 www-data@ubuntu:/home/saket$ ls -lha
@@ -502,7 +502,7 @@ So convert string "ippsec" into md5 hash and use it to gain yourself in your rea
 
 根据这两个文件可知, enc.txt是被Base64编码的使用对称加密算法加密的密文, 而ippsec的md5哈希则是key, 我们需要解密enc.txt但却不知道加密算法, 那么我们可以通过openssl把常见的加密算法都试一遍, 看看哪个能解出来
 
-使用md5sum完成对ippsec的哈希, 得到key, 注意echo要加上-n放置输出换行符
+使用md5sum完成对ippsec的哈希, 得到key, 注意echo要加上-n防止输出换行符
 
 ```shell
 ┌──(kali㉿kali)-[~/Prime1]

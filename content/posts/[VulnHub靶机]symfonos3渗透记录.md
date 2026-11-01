@@ -148,7 +148,8 @@ Nmap done: 1 IP address (1 host up) scanned in 31.48 seconds
 > | Referer | HTTP_REFERER |
 > | Cookie | HTTP_COOKIE |
 >
-> 那么攻击者只需对这些头传入恶意值, 即可RCE
+> 那么攻击者只需对这些头传入恶意值, 即可RCE  
+> 影响版本: 3.0~4.3
 
 攻击机使用rlwrap nc -lvvp 4444监听, 构建Payload发送给靶机, 成功反弹shell
 
