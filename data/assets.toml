@@ -112,7 +112,7 @@ music = "/music/thorough/t06.mp3"
 wallpaper = "/wallpapers/thorough/p06.png"
 
 [[thorough_pairs]]
-title = "司凤大道宽又阔"
+title = "通透大道宽又阔"
 music = "/music/thorough/t07.mp3"
 wallpaper = "/wallpapers/thorough/p07.jpg"
 
@@ -135,3 +135,13 @@ wallpaper = "/wallpapers/thorough/p11.jpg"
 title = "生日快乐(司凤版)"
 music = "/music/thorough/t11.mp3"
 wallpaper = "/wallpapers/thorough/p12.jpg"
+
+[[thorough_pairs]]
+title = "红莲华(司凤版)"
+music = "/music/thorough/t12.mp3"
+wallpaper = "/wallpapers/thorough/p13.jpg"
+
+[[thorough_pairs]]
+title = "学猫叫(司凤版)"
+music = "/music/thorough/t13.mp3"
+wallpaper = "/wallpapers/thorough/p14.jpg"
