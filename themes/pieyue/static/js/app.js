@@ -232,9 +232,38 @@
     });
   }
 
+  /* 移动端列表卡片：摘要行数与左侧标签栏高度对齐（最少 3 行） */
+  let summaryEqTimer = 0;
+  function equalizeSummaryLines() {
+    const items = $$('.post-item.has-thumb');
+    if (!items.length && !$$('.post-item').length) return;
+    if (innerWidth > 640) {
+      $$('.post-item-summary').forEach((s) => { s.style.webkitLineClamp = ''; });
+      return;
+    }
+    $$('.post-item').forEach((item) => {
+      const summary = item.querySelector('.post-item-summary');
+      if (!summary) return;
+      const aside = item.querySelector('.post-aside');
+      if (!aside) { summary.style.webkitLineClamp = ''; return; }   // 无图文章标签在正文中
+      const asideH = aside.getBoundingClientRect().height;
+      const head = item.querySelector('.post-item-head');
+      const headH = head ? head.getBoundingClientRect().height : 0;
+      const gap = parseFloat(getComputedStyle(item.querySelector('.post-item-body')).rowGap) || 0;
+      const lh = parseFloat(getComputedStyle(summary).lineHeight) || 22;
+      const avail = asideH - headH - gap;
+      const lines = Math.max(3, Math.min(14, Math.floor(avail / lh)));
+      summary.style.webkitLineClamp = String(lines);
+    });
+  }
+  pageInits.push(equalizeSummaryLines);
+  window.addEventListener('resize', () => {
+    clearTimeout(summaryEqTimer);
+    summaryEqTimer = setTimeout(equalizeSummaryLines, 150);
+  });
+
   /* Giscus 评论区（文章页） */
-  function initGiscus() {
-    const box = $('#giscus-container');
+  function initGiscus() {    const box = $('#giscus-container');
     if (!box || box.dataset.done === '1') return;
     const g = config.giscus || {};
     if (!g.repoId || !g.categoryId) {
