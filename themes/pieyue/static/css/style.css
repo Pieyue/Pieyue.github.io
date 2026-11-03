@@ -1339,7 +1339,9 @@ body.mode-thorough #btn-mode {
   .page-card, .post { padding: 24px 20px; }
   .post-body { font-size: 1.06rem; }   /* 移动端正文放大一号 */
   .post-body pre, .post-body img, .post-body table, .post-body iframe { max-width: 100%; }
-  .post-item { gap: 12px; padding: 16px; }
+  .post-item { gap: 12px; padding: 16px; align-items: stretch; }   /* 两列等高，摘要可随标签栏增高 */
+  .post-item-body { display: flex; flex-direction: column; gap: 6px; }
+  .post-item-summary { flex: 1 1 auto; }   /* 行数由 JS 按左栏高度计算 */
   .post-aside { width: 88px; gap: 6px; }
   .post-thumb { height: 88px; }
   /* 移动端：标签显示在图片下方，正文内不再重复 */
