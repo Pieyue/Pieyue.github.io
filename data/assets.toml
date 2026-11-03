@@ -42,6 +42,14 @@ src = "/music/normal/n08.mp3"
 title = "Daoko & 米津玄師 - 打上花火"
 src = "/music/normal/n09.mp3"
 
+[[normal_music]]
+title = "スパークル（火花） - RADWIMPS"
+src = "/music/normal/n10.mp3"
+
+[[normal_music]]
+title = "夢灯籠 - RADWIMPS"
+src = "/music/normal/n11.mp3"
+
 # ---- 正常模式壁纸（图片 + 视频） ----
 
 [[normal_wallpapers]]
