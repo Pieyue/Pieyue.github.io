@@ -351,11 +351,34 @@ cat: /etc/crontab: Permission denied
 搜索自动任务相关日志
 
 ```shell
-$ find / -name cronlog -type f 2>/dev/null
+overflow@troll:/$ find / -name "cron*" -type f 2>/dev/null
+/usr/sbin/cron
+/usr/share/vim/vim74/syntax/crontab.vim
+/usr/share/man/man1/crontab.1.gz
+/usr/share/man/man8/cron.8.gz
+/usr/share/man/man5/crontab.5.gz
+/usr/share/doc/cron/examples/cron-stats.pl
+/usr/share/doc/cron/examples/crontab2english.pl
+/usr/share/doc/cron/examples/cron-tasks-review.sh
+/usr/share/bash-completion/completions/crontab
+/usr/bin/crontab
+/run/crond.reboot
+/run/crond.pid
+/etc/init/cron.conf
+/etc/default/cron
+/etc/crontab
+/etc/pam.d/cron
 /var/log/cronlog
+/var/lib/dpkg/info/cron.conffiles
+/var/lib/dpkg/info/cron.preinst
+/var/lib/dpkg/info/cron.prerm
+/var/lib/dpkg/info/cron.postinst
+/var/lib/dpkg/info/cron.postrm
+/var/lib/dpkg/info/cron.list
+/var/lib/dpkg/info/cron.md5sums
 ```
 
-查看内容, 发现运行了一个python脚本, 每2分钟运行一次
+查看`/var/log/cronlog`内容, 发现运行了一个python脚本, 每2分钟运行一次
 
 ```text
 */2 * * * * cleaner.py
