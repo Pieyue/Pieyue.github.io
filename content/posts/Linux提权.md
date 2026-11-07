@@ -172,6 +172,14 @@ echo "test::0:0:: :/bin/shell" | sudo tee -a /etc/passwd
 sudo mysql -e "\! /bin/bash"
 ```
 
+### less提权
+
+在less中按下`v`键即可进入vi/vim, 之后按照vi/vim的提权方法提权即可
+
+### vi/vim提权
+
+当vi/vim被以root权限执行时, 输入命令`:!sh`即可开启一个终端会话
+
 ## 服务漏洞提权
 
 ### MySQL-UDF提权
