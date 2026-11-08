@@ -1,7 +1,7 @@
 +++
 date = '2026-11-07T20:34:13+08:00'
 draft = false
-title = '[HVM]Liar渗透记录'
+title = '[HMV]Liar渗透记录'
 tags = ['HackMyVM','Windows','WinRM']
 +++
 
