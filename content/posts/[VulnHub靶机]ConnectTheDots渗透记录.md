@@ -412,7 +412,7 @@ I see you're here for the password. Holy Moly! Battery is dying !! Mentioning be
 
 ![](https://cdn.jsdelivr.net/gh/Pieyue/blog_images@main/%E9%9D%B6%E6%9C%BA/ConnectTheDots%E4%B8%8B%E8%BD%BDswp%E6%96%87%E4%BB%B6.avif)
 
-使用strings查看其内容
+使用vim -r查看其内容
 
 ```text
 I see you're here for the password. Holy Moly! Battery is dying !! Mentioning below for reference..
