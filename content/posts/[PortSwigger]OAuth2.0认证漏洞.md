@@ -60,7 +60,7 @@ OAuth 2.0 最初是为了在应用之间共享特定数据的访问权限而开�
 1.  **授权码模式 (Authorization code)**
 2.  **隐式模式 (Implicit)**
 
-## 总结：OAuth 作用域 (OAuth scopes)
+## OAuth 作用域 (OAuth scopes)
 
 **核心概念**
 对于任何 OAuth 授权类型，客户端应用必须指定它想要访问的数据以及想要执行的操作。这是通过向 OAuth 服务发送的授权请求中的 `scope` 参数来实现的。
