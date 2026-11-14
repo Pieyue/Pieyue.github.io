@@ -4,7 +4,16 @@
     <nav class="site-nav content-only" aria-label="站点导航">
       <a href="{{ site.Home.RelPermalink }}">主页</a>
       <a href="{{ "posts/" | relURL }}">文章</a>
+      <a href="{{ "messages/" | relURL }}">留言板</a>
     </nav>
+    <form class="topbar-search content-only" action="{{ "search/" | relURL }}" method="get" role="search">
+      <input type="search" name="q" placeholder="搜索文章…" autocomplete="off" aria-label="搜索文章">
+      <button type="submit" aria-label="搜索">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/>
+        </svg>
+      </button>
+    </form>
   </div>
   <div class="topbar-right">
     <button id="btn-weather" class="icon-btn" title="天气" aria-haspopup="true" aria-expanded="false">
@@ -19,8 +28,8 @@
     </button>
     <button id="btn-mode" class="pill-btn" title="切换模式">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="6.5" cy="15" r="3.8"/><circle cx="17.5" cy="15" r="3.8"/>
-        <path d="M10.3 15h3.4"/><path d="M2.7 13 4 9.2C4.3 8.5 5 8 5.8 8h3.4M21.3 13 20 9.2C19.7 8.5 19 8 18.2 8h-3.4"/>
+        <path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/>
+        <path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/>
       </svg>
       <span id="mode-label">通透模式</span>
     </button>

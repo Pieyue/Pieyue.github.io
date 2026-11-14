@@ -87,6 +87,8 @@
       document.body.dataset.page = state.page;
       applyBodyState();
       window.scrollTo(0, 0);
+      const topSearch = $('.topbar-search input');   // 顶栏搜索框换页后清空
+      if (topSearch) topSearch.value = '';
       runPageInits();
       emit('navigated', { url });
     };
@@ -148,6 +150,16 @@
     input.form.requestSubmit();
   });
 
+  /* 目录 TAG 点击 → 以该标签为关键词跳转搜索页（卡片内 a 不能嵌套 a，故用 span + 事件委托）。
+     捕获阶段执行并阻断传播：避免 SPA 的链接拦截器把点击导航到文章页 */
+  document.addEventListener('click', (e) => {
+    const tag = e.target.closest('.tag[data-q]');
+    if (!tag) return;
+    e.preventDefault();
+    e.stopPropagation();
+    navigate('/search/?q=' + encodeURIComponent(tag.dataset.q));
+  }, true);
+
   window.addEventListener('popstate', () => {
     /* 仅 hash 变化（如点击目录锚点）时浏览器已自行滚动到目标，无需重渲染 */
     const here = location.pathname + location.search;
@@ -184,7 +196,7 @@
         el.after(span);
       });
       if (hl.querySelector('.code-header')) return;
-      const codeEl = hl.querySelector('pre code');
+      const codeEl = hl.querySelector('td:last-child pre code') || hl.querySelector('pre code');
       const lang = codeEl ? (codeEl.getAttribute('data-lang') || ((codeEl.className.match(/language-([\w+#.-]+)/) || [])[1])) : '';
 
       const header = document.createElement('div');
@@ -206,7 +218,7 @@
         '<svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
         '<svg class="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
       btn.addEventListener('click', async () => {
-        const codeTarget = hl.querySelector('pre code') || hl.querySelector('pre');
+        const codeTarget = hl.querySelector('td:last-child pre code') || hl.querySelector('pre code') || hl.querySelector('pre');
         const text = (codeTarget ? codeTarget.innerText : hl.innerText).replace(/\n$/, '');
         try {
           await navigator.clipboard.writeText(text);
@@ -262,8 +274,10 @@
     summaryEqTimer = setTimeout(equalizeSummaryLines, 150);
   });
 
-  /* Giscus 评论区（文章页） */
-  function initGiscus() {    const box = $('#giscus-container');
+  /* Giscus：文章评论 + 留言板。
+     带 data-giscus 的容器都会挂载；可用 data-giscus-mapping / data-giscus-term
+     覆盖映射（留言板用 specific + 固定 term，让所有留言集中在一个 discussion） */
+  function mountGiscus(box) {
     if (!box || box.dataset.done === '1') return;
     const g = config.giscus || {};
     if (!g.repoId || !g.categoryId) {
@@ -280,7 +294,8 @@
       'data-repo-id': g.repoId,
       'data-category': g.category,
       'data-category-id': g.categoryId,
-      'data-mapping': g.mapping || 'pathname',
+      'data-mapping': box.dataset.giscusMapping || g.mapping || 'pathname',
+      'data-term': box.dataset.giscusTerm || '',
       'data-strict': g.strict || '0',
       'data-reactions-enabled': g.reactionsEnabled || '1',
       'data-emit-metadata': g.emitMetadata || '0',
@@ -289,8 +304,12 @@
       'data-lang': g.lang || 'zh-CN',
       'data-loading': g.loading || 'lazy',
     };
-    for (const [k, v] of Object.entries(attrs)) if (v != null) s.setAttribute(k, v);
+    for (const [k, v] of Object.entries(attrs)) if (v != null && v !== '') s.setAttribute(k, v);
     box.appendChild(s);
+  }
+
+  function initGiscus() {
+    $$('[data-giscus]').forEach(mountGiscus);
   }
 
   pageInits.push(initCodeCopy, initGiscus);

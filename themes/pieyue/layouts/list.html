@@ -19,7 +19,7 @@
           <div class="post-aside">
             <div class="post-thumb"><img src="{{ $thumb }}" alt="" loading="lazy" decoding="async"></div>
             {{ with $tags }}
-            <div class="post-tags">{{ range . }}<span class="tag"># {{ .LinkTitle }}</span>{{ end }}</div>
+            <div class="post-tags">{{ range . }}<span class="tag" data-q="{{ .LinkTitle }}"># {{ .LinkTitle }}</span>{{ end }}</div>
             {{ end }}
           </div>
           {{ end }}
@@ -30,7 +30,7 @@
             </div>
             <p class="post-item-summary">{{ .Summary | plainify | chomp }}</p>
             {{ with $tags }}
-            <div class="post-tags">{{ range . }}<span class="tag"># {{ .LinkTitle }}</span>{{ end }}</div>
+            <div class="post-tags">{{ range . }}<span class="tag" data-q="{{ .LinkTitle }}"># {{ .LinkTitle }}</span>{{ end }}</div>
             {{ end }}
           </div>
         </a>

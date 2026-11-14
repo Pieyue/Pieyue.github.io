@@ -131,9 +131,52 @@ body.night.mode-thorough #wallpaper-layer video {
   pointer-events: none;
   background: linear-gradient(rgba(8, 12, 20, 0.38), rgba(8, 12, 20, 0));
 }
-#topbar a, #topbar button { pointer-events: auto; }
+#topbar a, #topbar button, #topbar .topbar-search { pointer-events: auto; }   /* 搜索表单含 input，需整块恢复 */
 
 .topbar-left, .topbar-right { display: flex; align-items: center; gap: 12px; }
+.topbar-left { flex: 1 1 auto; min-width: 0; }
+.topbar-right { flex: none; }
+/* 内容页顶栏搜索框（主页隐藏）：不用 backdrop-filter，避免相邻毛玻璃接缝 */
+.topbar-search {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 300px;
+  margin-left: 6px;
+  padding: 4px 5px 4px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  transition: background 0.2s, border-color 0.2s;
+  position: relative;   /* 联想下拉的定位基准 */
+}
+.topbar-search:focus-within { background: rgba(255, 255, 255, 0.24); border-color: rgba(255, 255, 255, 0.5); }
+.topbar-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #fff;
+  font-size: 0.88rem;
+  font-family: inherit;
+}
+.topbar-search input::placeholder { color: rgba(255, 255, 255, 0.7); }
+.topbar-search button {
+  flex: none;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: none;
+  transition: background 0.2s;
+}
+.topbar-search button:hover { background: rgba(255, 255, 255, 0.2); }
+.topbar-search button svg { width: 14px; height: 14px; }
 
 .brand {
   color: #fff;
@@ -428,6 +471,10 @@ mark { background: rgba(255, 213, 79, 0.85); color: #1d2534; border-radius: 3px;
 }
 .page-desc { margin: 0; color: var(--ink-soft); }
 
+/* 留言板页 */
+.messages-page .page-head { margin-bottom: 22px; }
+.messages-page .page-desc { font-size: 0.92rem; line-height: 1.7; max-width: 640px; }
+
 .post-layout {
   display: grid;
   grid-template-columns: 264px minmax(0, 1fr);
@@ -454,7 +501,11 @@ mark { background: rgba(255, 213, 79, 0.85); color: #1d2534; border-radius: 3px;
   overflow: auto;
   padding: 18px 16px 20px 26px;   /* 左侧留出折叠按钮的空间 */
   font-size: 0.92rem;
-  scrollbar-width: thin;
+  /* 裁剪到圆角矩形：滚动条不再溢出圆角弧线 */
+  clip-path: inset(0 round 18px);
+  /* 常驻合成层 + 圆角裁剪：毛玻璃重绘时圆角处不再闪现圆形伪影 */
+  will-change: transform;
+  isolation: isolate;
 }
 .toc-head {
   display: flex;
@@ -519,7 +570,9 @@ mark { background: rgba(255, 213, 79, 0.85); color: #1d2534; border-radius: 3px;
 }
 #TableOfContents a {
   display: block;
-  padding: 5px 6px;
+  /* 左 padding 扩到 28px 并用负 margin 补回：悬停背景向左覆盖折叠三角 */
+  padding: 5px 6px 5px 28px;
+  margin-left: -22px;
   border-radius: 8px;
   color: var(--ink-soft);
   line-height: 1.45;
@@ -531,18 +584,32 @@ mark { background: rgba(255, 213, 79, 0.85); color: #1d2534; border-radius: 3px;
 .toc-toggle {
   position: absolute;
   margin-left: -22px;
-  margin-top: 3px;
+  margin-top: 7px;   /* 垂直居中于章节行（行盒 ≈31px，三角 18px） */
   width: 18px;
   height: 18px;
-  border-radius: 50%;
-  font-size: 10px;
-  line-height: 18px;
-  text-align: center;
-  color: var(--ink-soft);
-  background: rgba(127, 140, 170, 0.14);
-  transition: transform 0.2s, background 0.2s;
+  border: none;
+  padding: 0;
+  background: none;          /* 无底面 */
+  color: var(--ink-soft);    /* 镂空三角的描边色 */
+  transition: color 0.25s ease;
 }
-.toc-toggle:hover { background: rgba(79, 140, 255, 0.25); color: var(--accent); }
+.toc-toggle svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+  margin: 2px auto;
+  fill: none;                /* 默认镂空 */
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: fill 0.25s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.toc-toggle:hover { color: var(--accent); }
+.toc-toggle:hover svg { fill: var(--accent); }   /* 悬停：蓝色实心 */
+/* 收起时三角旋转为朝右（与子列表收起动画同步） */
+#TableOfContents li.collapsed .toc-toggle svg { transform: rotate(-90deg); }
 #TableOfContents li { position: relative; }
 /* 收起状态由 .toc-sub 的 grid 行高过渡处理，此处不再用 display:none */
 
@@ -571,6 +638,34 @@ mark { background: rgba(255, 213, 79, 0.85); color: #1d2534; border-radius: 3px;
   color: var(--accent);
   background: rgba(79, 140, 255, 0.12);
   border: 1px solid rgba(79, 140, 255, 0.25);
+  text-decoration: none;          /* tag 为链接：去下划线 */
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.tag[data-q] { cursor: pointer; }   /* 卡片内 tag：点击跳搜索（JS 委托） */
+.tag[data-q]:hover {
+  color: var(--accent);
+  background: rgba(79, 140, 255, 0.22);
+}
+a.tag:hover {
+  color: var(--accent);
+  background: rgba(79, 140, 255, 0.22);
+  text-decoration: none;
+}
+
+/* 搜索联想下拉：展开-收起动画 */
+.search-suggest {
+  visibility: hidden;
+  opacity: 0;
+  transform: scale(0.96) translateY(-6px);
+  transform-origin: top center;
+  transition: opacity 0.18s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.18s;
+  pointer-events: none;
+}
+.search-suggest.show {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
 }
 
 .post-body {
@@ -701,14 +796,28 @@ body.night .post-body code { background: rgba(255, 255, 255, 0.1); }
 .post-body .highlight pre code { background: none; padding: 0; font-size: inherit; }
 
 /* 代码块滚动条：与深色代码主题匹配 */
-.highlight pre {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
-}
 .highlight pre::-webkit-scrollbar { width: 8px; height: 8px; }
 .highlight pre::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.04); }
 .highlight pre::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 999px; }
+.highlight pre::-webkit-scrollbar-button { display: none; height: 0; width: 0; }
 .highlight pre::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.35); }
+.highlight pre::-webkit-scrollbar-button { display: none; height: 0; width: 0; }
+
+/* 代码块行号：CSS 计数器按 .line 行编号（复制时不含行号） */
+.highlight pre code {
+  display: block;
+  counter-reset: code-line;
+}
+.highlight pre code .line::before {
+  counter-increment: code-line;
+  content: counter(code-line);
+  display: inline-block;
+  width: 1.9em;
+  margin-right: 0.85em;
+  text-align: right;
+  color: #6e7681;
+  user-select: none;
+}
 
 /* Chroma 语法高亮：github-dark 基底，并为内置函数/函数名/常量/装饰器补色 */
 .chroma { color: #e6edf3; }
@@ -817,7 +926,7 @@ body.night .post-item { background: rgba(255, 255, 255, 0.04); }
   box-shadow: 0 8px 24px rgba(79, 140, 255, 0.18);
 }
 .post-item-head { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
-.post-item-head h2 { margin: 0; font-size: 1.18rem; font-weight: 700; }
+.post-item-head h2 { margin: 0; font-size: 1.18rem; font-weight: 700; overflow-wrap: anywhere; }   /* 长英文词（如下划线连接的靶机名）窄屏可断行 */
 .post-date { flex: none; color: var(--ink-soft); font-size: 0.84rem; }
 .post-item-summary {
   margin: 8px 0 0;
@@ -852,7 +961,8 @@ body.night .post-item { background: rgba(255, 255, 255, 0.04); }
 .comments { margin-top: 34px; padding-top: 6px; border-top: 1px solid rgba(127, 140, 170, 0.22); }
 .comments h2 { font-size: 1.2rem; letter-spacing: 0.1em; }
 /* Giscus 外层画一圈可见线框（控件自身不画边框），并保证 iframe 铺满不裁切 */
-#giscus-container {
+#giscus-container,
+#giscus-messages {
   width: 100%;
   box-sizing: border-box;
   padding: 12px;
@@ -860,14 +970,15 @@ body.night .post-item { background: rgba(255, 255, 255, 0.04); }
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.3);
 }
-#giscus-container iframe { display: block; width: 100% !important; }
-body.night #giscus-container {
+#giscus-container iframe,
+#giscus-messages iframe { display: block; width: 100% !important; }
+body.night #giscus-container,
+body.night #giscus-messages {
   border-color: rgba(255, 255, 255, 0.22);
   background: rgba(255, 255, 255, 0.05);
 }
 .giscus-hint {
-  padding: 16px 18px;
-  border: 1px dashed rgba(127, 140, 170, 0.45);
+  padding: 16px 18px;  border: 1px dashed rgba(127, 140, 170, 0.45);
   border-radius: 12px;
   color: var(--ink-soft);
   font-size: 0.9rem;
@@ -999,7 +1110,6 @@ body.night #giscus-container {
   opacity: 0;
   overflow: hidden;
   border-top: 1px solid transparent;
-  scrollbar-width: thin;
   transition: max-height 0.34s ease, opacity 0.26s ease, margin-top 0.34s ease, border-color 0.34s ease;
 }
 #playlist.open {
@@ -1013,22 +1123,17 @@ body.night #giscus-container {
 }
 
 /* 与主题适配的细滚动条 */
-#playlist {
-  scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
-}
 #playlist::-webkit-scrollbar { width: 6px; }
+#playlist::-webkit-scrollbar-button { display: none; height: 0; width: 0; }
 #playlist::-webkit-scrollbar-track { background: transparent; }
 #playlist::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.22); border-radius: 999px; }
 #playlist::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
 
-.toc-panel {
-  scrollbar-color: rgba(90, 105, 130, 0.4) transparent;
-}
 .toc-panel::-webkit-scrollbar { width: 6px; }
 .toc-panel::-webkit-scrollbar-track { background: transparent; }
 .toc-panel::-webkit-scrollbar-thumb { background: rgba(90, 105, 130, 0.35); border-radius: 999px; }
 .toc-panel::-webkit-scrollbar-thumb:hover { background: rgba(90, 105, 130, 0.55); }
-body.night .toc-panel { scrollbar-color: rgba(255, 255, 255, 0.25) transparent; }
+.toc-panel::-webkit-scrollbar-button { display: none; height: 0; width: 0; }   /* 去掉滚动条两端的箭头按钮 */
 body.night .toc-panel::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.22); }
 body.night .toc-panel::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
 #playlist li {
@@ -1045,6 +1150,42 @@ body.night .toc-panel::-webkit-scrollbar-thumb:hover { background: rgba(255, 255
 #playlist li:hover { background: rgba(255, 255, 255, 0.1); }
 #playlist li.current { color: #a5c8ff; background: rgba(79, 140, 255, 0.16); font-weight: 500; }
 #playlist li.current::before { content: '♪ '; }
+
+/* 白天模式：白色主体纯色播放器，天蓝色点缀（无毛玻璃），黑夜保持深色玻璃 */
+body:not(.night) #player {
+  color: var(--ink);
+  background: #ffffff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-color: rgba(86, 177, 239, 0.55);
+  box-shadow: -8px 8px 34px rgba(10, 15, 30, 0.16), -2px 0 14px rgba(86, 177, 239, 0.35);
+}
+body:not(.night) #player-title { color: var(--ink); }
+body:not(.night) .player-grip { background: linear-gradient(rgba(86, 177, 239, 0.45), rgba(86, 177, 239, 0.1)); }
+body:not(.night) .player-grip span { background: rgba(86, 177, 239, 0.6); }
+body:not(.night) .p-btn {
+  color: #1b7cc9;
+  background: rgba(86, 177, 239, 0.12);
+  border-color: rgba(86, 177, 239, 0.28);
+}
+body:not(.night) .p-btn:hover { background: rgba(86, 177, 239, 0.24); }
+body:not(.night) .p-btn.big {
+  color: #ffffff;
+  background: #56b1ef;
+  box-shadow: 0 4px 16px rgba(86, 177, 239, 0.45);
+}
+body:not(.night) #progress-bar { background: rgba(86, 177, 239, 0.25); }
+body:not(.night) #progress-fill { background: #56b1ef; }
+body:not(.night) .player-progress { color: var(--ink-soft); }   /* 进度条前后时间：深色 */
+body:not(.night) .volume-wrap { color: #1b7cc9; }
+body:not(.night) #volume { accent-color: #56b1ef; }
+body:not(.night) #playlist { border-top-color: rgba(86, 177, 239, 0.3); }
+body:not(.night) #playlist.open { border-top-color: rgba(86, 177, 239, 0.3); }
+body:not(.night) #playlist li { color: var(--ink); }
+body:not(.night) #playlist li:hover { background: rgba(86, 177, 239, 0.12); }
+body:not(.night) #playlist li.current { color: #1b7cc9; background: rgba(86, 177, 239, 0.18); font-weight: 500; }
+body:not(.night) #playlist::-webkit-scrollbar-thumb { background: rgba(86, 177, 239, 0.5); }
+body:not(.night) #playlist::-webkit-scrollbar-thumb:hover { background: rgba(86, 177, 239, 0.75); }
 
 /* ==========================================================================
    搜索页
@@ -1086,7 +1227,17 @@ body.night .page-search-form { background: rgba(255, 255, 255, 0.06); }
 }
 .search-results .result:hover { text-decoration: none; border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(79, 140, 255, 0.15); }
 .search-results .result h3 { margin: 0 0 6px; font-size: 1.05rem; }
+.search-results .result h3 a { color: inherit; text-decoration: none; }
+.search-results .result h3 a:hover { color: var(--accent); }
 .search-results .result p { margin: 0; color: var(--ink-soft); font-size: 0.88rem; line-height: 1.7; }
+.search-results .result-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.search-results .result-meta time { color: var(--ink-soft); font-size: 0.78rem; }   /* 纯文本时间：无链接无边框 */
 .search-results .result-meta { margin-top: 8px; display: flex; gap: 8px; align-items: center; color: var(--ink-soft); font-size: 0.78rem; }
 
 /* ==========================================================================
@@ -1135,19 +1286,17 @@ body.night .page-search-form { background: rgba(255, 255, 255, 0.06); }
   opacity: 0;
   transform: translateY(-8px);
   transition: opacity 0.26s ease, transform 0.26s ease;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(90, 105, 130, 0.4) transparent;
 }
 .weather-panel.show { opacity: 1; transform: translateY(0); }
 .weather-panel::-webkit-scrollbar { width: 6px; }
 .weather-panel::-webkit-scrollbar-track { background: transparent; }
 .weather-panel::-webkit-scrollbar-thumb { background: rgba(90, 105, 130, 0.35); border-radius: 999px; }
+.weather-panel::-webkit-scrollbar-button { display: none; height: 0; width: 0; }
 body.night .weather-panel {
   background: rgba(16, 19, 27, 0.92);
   border-color: rgba(255, 255, 255, 0.12);
   color: #e9edf5;
   box-shadow: 0 16px 44px rgba(0, 0, 0, 0.5);
-  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
 }
 body.night .weather-panel::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.22); }
 
@@ -1309,18 +1458,28 @@ body.mode-thorough #btn-mode {
   /* 目录改为悬浮面板：点悬浮按钮弹出，点其它位置收起 */
   .toc-panel {
     position: fixed;
+    top: auto;   /* 覆盖桌面 sticky 的 top：top+bottom 同存会把面板垂直拉伸并钉在上方 */
     right: 16px;
     bottom: 250px;
-    width: min(320px, calc(100vw - 32px));
+    width: auto;   /* 宽度随章节内容自适应，最长行撑开 */
+    max-width: min(320px, calc(100vw - 32px));
     max-height: min(56vh, 460px);
     overflow-y: auto;
     z-index: 58;
     opacity: 0;
-    transform: translateY(14px) scale(0.97);
+    transform: scale(0.7);
+    transform-origin: bottom center;   /* 展开/收起以按钮一侧为基准 */
     pointer-events: none;
-    transition: opacity 0.25s ease, transform 0.25s ease;
+    /* left/top 过渡：拖动跟随与边界重摆均为平滑移动（不再瞬移） */
+    transition: opacity 0.22s ease, transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+      left 0.25s ease, top 0.25s ease;
   }
-  .toc-panel.fab-open { opacity: 1; transform: none; pointer-events: auto; }
+  .toc-panel.fab-open { opacity: 1; transform: scale(1); pointer-events: auto; }
+  /* 松手吸附/边界重摆时面板位置的移动动画 */
+  .toc-panel.snapping {
+    transition: left 0.3s cubic-bezier(0.22, 1, 0.36, 1), top 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.22s ease, transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+  }
 }
 
 @media (max-width: 720px) {
@@ -1333,6 +1492,15 @@ body.mode-thorough #btn-mode {
   .pill-btn svg { width: 16px; height: 16px; }
   .site-nav { gap: 4px; }
   .site-nav a { padding: 5px 10px; font-size: 0.84rem; }
+  .topbar-search { max-width: 150px; margin-left: 4px; padding-left: 10px; }
+  .topbar-search input { font-size: 0.8rem; }
+  /* 手机端顶栏放不下输入框：只留搜索图标，点击进入搜索页 */
+  .topbar-search { flex: none; width: 34px; height: 34px; padding: 0; justify-content: center; border-radius: 50%; }
+  .topbar-search input { display: none; }
+  .topbar-search button { width: 100%; height: 100%; }
+  /* 通透模式胶囊只留图标，避免顶栏溢出 */
+  .pill-btn #mode-label { display: none; }
+  .pill-btn { width: 34px; padding: 0; }
 }
 
 @media (max-width: 640px) {
@@ -1361,6 +1529,21 @@ body.mode-thorough #btn-mode {
   #player { width: min(320px, 96vw); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+/* Firefox：不支持 webkit 伪元素滚动条，改用标准属性（其滚动条本身无箭头按钮） */
+@supports not selector(::-webkit-scrollbar) {
+  .toc-panel,
+  #playlist,
+  .weather-panel,
+  .highlight pre {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(90, 105, 130, 0.4) transparent;
+  }
+  body.night .toc-panel,
+  body.night #playlist,
+  body.night .weather-panel {
+    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

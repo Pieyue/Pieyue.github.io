@@ -93,6 +93,19 @@
   });
 
   /* ---------- 白天 / 黑夜 ---------- */
+  /* 自动切换：访问者没有手动偏好（localStorage 无 py-night）时，
+     按本地时间判定 —— 19:00 至次日 6:00 进入黑夜，其余为白天。
+     手动点击按钮会保存偏好，此后以偏好为准；清除浏览器存储即恢复自动。 */
+  let autoNightNotice = false;
+  if (localStorage.getItem('py-night') === null) {
+    const h = new Date().getHours();
+    const auto = h >= 19 || h < 6;
+    if (auto !== state.night) {
+      state.night = auto;
+      autoNightNotice = true;
+    }
+  }
+
   function applyNight() {
     document.body.classList.toggle('night', state.night);
     /* 已挂载的 Giscus 主题跟随切换 */
@@ -102,6 +115,9 @@
     }
   }
   applyNight();
+  if (autoNightNotice) {
+    toast(state.night ? '已按本地时间自动进入黑夜模式 🌙' : '已按本地时间自动进入白天模式 ☀️');
+  }
 
   let nightFadeTimer = 0;
   $('#btn-night').addEventListener('click', () => {
