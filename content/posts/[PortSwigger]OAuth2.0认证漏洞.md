@@ -80,6 +80,26 @@ scope=https://oauth-authorization-server.com/auth/scopes/user/contacts.readonly
 *   当 OAuth 被用于**身份验证** (Authentication) 时，通常使用标准化的 **OpenID Connect** scopes 替代。
 *   例如：`openid profile` scope 将授予客户端应用读取用户预定义基本信息（如电子邮件地址、用户名等）的权限。
 
+![](https://portswigger.net/web-security/images/oauth-authorization-code-flow.jpg)
+
+### 授权请求 (Authorization request)
+
+**核心流程**
+客户端应用向 OAuth 服务的授权端点（如 `/authorization` 或 `/auth`）发送请求，以获取访问特定用户数据的权限。
+
+**请求示例**
+```http
+GET /authorization?client_id=12345&redirect_uri=https://client-app.com/callback&response_type=code&scope=openid%20profile&state=ae13d489bd00e3c24 HTTP/1.1
+Host: oauth-authorization-server.com
+```
+
+**核心请求参数（通常在查询字符串中提供）**
+*   `client_id`：**必填参数**。包含客户端应用的唯一标识符，在客户端向 OAuth 服务注册时生成。
+*   `redirect_uri`：将授权码发送给客户端应用时，用户浏览器应重定向到的 URI（也称为“回调 URI”）。**许多 OAuth 攻击都是基于利用此参数的验证缺陷。**
+*   `response_type`：决定客户端期望的响应类型以及想要发起的流程。对于授权码模式（authorization code grant type），该值应为 `code`。
+*   `scope`：用于指定客户端想要访问的用户数据子集（可以是 OAuth 提供商自定义的，也可以是 OpenID Connect 规范定义的标准作用域）。
+*   `state`：存储与客户端应用当前会话绑定的唯一且不可猜测的值。OAuth 服务必须在响应中原样返回此值。该参数充当客户端应用的 **CSRF 令牌**，确保发往 `/callback` 端点的请求与发起 OAuth 流程的是同一人。
+
 ### Lab1: Authentication bypass via OAuth implicit flow
 
 ![](https://cdn.jsdelivr.net/gh/Pieyue/blog_images@main/PortSwigger/OAuth/LAB1-%E6%8F%8F%E8%BF%B0.avif)

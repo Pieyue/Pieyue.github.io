@@ -93,17 +93,11 @@
   });
 
   /* ---------- 白天 / 黑夜 ---------- */
-  /* 自动切换：访问者没有手动偏好（localStorage 无 py-night）时，
-     按本地时间判定 —— 19:00 至次日 6:00 进入黑夜，其余为白天。
-     手动点击按钮会保存偏好，此后以偏好为准；清除浏览器存储即恢复自动。 */
-  let autoNightNotice = false;
-  if (localStorage.getItem('py-night') === null) {
+  /* 每次访问都按本地时间自动判定：19:00 至次日 6:00 为黑夜，其余为白天。
+     手动切换仅影响本次浏览（不写入存储），刷新或下次访问恢复自动判定。 */
+  {
     const h = new Date().getHours();
-    const auto = h >= 19 || h < 6;
-    if (auto !== state.night) {
-      state.night = auto;
-      autoNightNotice = true;
-    }
+    state.night = h >= 19 || h < 6;
   }
 
   function applyNight() {
@@ -115,19 +109,15 @@
     }
   }
   applyNight();
-  if (autoNightNotice) {
-    toast(state.night ? '已按本地时间自动进入黑夜模式 🌙' : '已按本地时间自动进入白天模式 ☀️');
-  }
 
   let nightFadeTimer = 0;
   $('#btn-night').addEventListener('click', () => {
-    state.night = !state.night;
-    try { localStorage.setItem('py-night', state.night ? '1' : '0'); } catch (e) {}
+    state.night = !state.night;   /* 仅本次浏览生效，不写入存储 */
     /* 切换瞬间启用全局颜色过渡，随后移除 */
     document.body.classList.add('theme-fading');
     clearTimeout(nightFadeTimer);
     nightFadeTimer = setTimeout(() => document.body.classList.remove('theme-fading'), 650);
     applyNight();
-    toast(state.night ? '已进入黑夜模式 🌙' : '已回到白天 ☀️');
+    toast(state.night ? '已切换黑夜模式（本次浏览有效）🌙' : '已切换白天模式（本次浏览有效）☀️');
   });
 })();

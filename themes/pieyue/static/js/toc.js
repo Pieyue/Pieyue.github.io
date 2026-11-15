@@ -168,8 +168,8 @@
           document.removeEventListener('pointercancel', up);
           if (moved) {
             dragEndTime = performance.now();   // 拖后短窗口内的 click 一律忽略
+            fab.classList.add('snapping');     // 先加过渡类，吸附位移才有动画
             fabSnap();
-            fab.classList.add('snapping');   // 吸附过渡
             setTimeout(() => fab.classList.remove('snapping'), 380);
           }
         };

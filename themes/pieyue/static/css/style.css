@@ -626,6 +626,7 @@ mark { background: rgba(255, 213, 79, 0.85); color: #1d2534; border-radius: 3px;
   font-size: 2.1rem;
   line-height: 1.35;
   letter-spacing: 0.03em;
+  overflow-wrap: anywhere;   /* 长英文词（如靶机名）窄屏可断行 */
 }
 .post-meta { color: var(--ink-soft); font-size: 0.9rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .meta-sep { opacity: 0.6; }
@@ -724,6 +725,7 @@ a.tag:hover {
   transform: scale(0.96);
   transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
   cursor: default;
+  touch-action: none;   /* 捏合/拖动手势交给 JS 处理 */
 }
 .lightbox.show .lightbox-img { transform: scale(1); }
 .lightbox-close {

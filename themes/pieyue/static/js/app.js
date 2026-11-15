@@ -16,7 +16,7 @@
   const state = {
     page: document.body.dataset.page || 'home',
     mode: sessionStorage.getItem('py-mode') || 'normal',
-    night: localStorage.getItem('py-night') === '1',
+    night: false,                        /* 由 modes.js 按本地时间自动判定 */
     rainPref: localStorage.getItem('py-rain'),   // '1' | '0' | null（自动跟随天气）
     isRaining: false,
     rainOn: false,
