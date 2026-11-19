@@ -112,7 +112,7 @@ type = "video"
 [[thorough_pairs]]
 title = "一分钱(司凤版)"
 music = "/music/thorough/t01.mp3"
-wallpaper = "/wallpapers/thorough/p01.png"
+wallpaper = "/wallpapers/thorough/p01.jpg"
 
 [[thorough_pairs]]
 title = "丢手绢(司凤版)"
@@ -132,7 +132,7 @@ wallpaper = "/wallpapers/thorough/p05.jpeg"
 [[thorough_pairs]]
 title = "蜜雪冰城(司凤版)"
 music = "/music/thorough/t06.mp3"
-wallpaper = "/wallpapers/thorough/p06.png"
+wallpaper = "/wallpapers/thorough/p06.jpg"
 
 [[thorough_pairs]]
 title = "通透大道宽又阔"
