@@ -73,15 +73,23 @@
   function renderResults(box, items, q) {
     if (!q) { box.innerHTML = '<p class="muted">输入关键词，搜索全部文章…</p>'; return; }
     if (!items.length) { box.innerHTML = '<p class="muted">没有找到与「' + esc(q) + '」相关的文章。</p>'; return; }
-    box.innerHTML = items.map((it) =>
-      '<div class="result">' +
-        '<h3><a href="' + esc(it.url) + '">' + highlight(it.title, q) + '</a></h3>' +
-        '<p>' + snippet(it, q) + '</p>' +
-        '<div class="result-meta"><time>' + esc(it.date) + '</time>' +
-          (it.tags || []).map((t) => '<a class="tag" href="/search/?q=' + encodeURIComponent(t) + '"># ' + esc(t) + '</a>').join('') +
+    box.innerHTML = items.map((it) => {
+      /* 有首图的文章：左侧预览图，版式与文章列表（list.html）一致 */
+      const thumb = it.thumb
+        ? '<a class="result-thumb" href="' + esc(it.url) + '" tabindex="-1" aria-hidden="true">' +
+          '<img src="' + esc(it.thumb) + '" alt="" loading="lazy" decoding="async"></a>'
+        : '';
+      return '<div class="result">' +
+        thumb +
+        '<div class="result-body">' +
+          '<h3><a href="' + esc(it.url) + '">' + highlight(it.title, q) + '</a></h3>' +
+          '<p>' + snippet(it, q) + '</p>' +
+          '<div class="result-meta"><time>' + esc(it.date) + '</time>' +
+            (it.tags || []).map((t) => '<a class="tag" href="/search/?q=' + encodeURIComponent(t) + '"># ' + esc(t) + '</a>').join('') +
+          '</div>' +
         '</div>' +
-      '</div>'
-    ).join('');
+      '</div>';
+    }).join('');
   }
 
   window.PY.pageInits.push(() => {

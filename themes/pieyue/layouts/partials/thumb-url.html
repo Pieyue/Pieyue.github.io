@@ -1,0 +1,8 @@
+{{- /* 从渲染后的正文 HTML 取首张图片的 src，作为列表卡片 / 搜索结果的缩略图
+       · 传入正文 HTML 字符串（.Content），返回图片地址，无图时返回空串
+       · 文章列表（list.html）与搜索索引（index.json.json）共用，保证两处配图一致 */ -}}
+{{- $thumb := "" -}}
+{{- with findRESubmatch `<img[^>]+src="([^"]+)"` . 1 -}}
+  {{- $thumb = index (index . 0) 1 -}}
+{{- end -}}
+{{- return $thumb -}}

@@ -3,6 +3,7 @@ date = '2026-10-25T21:35:40+08:00'
 draft = false
 title = '[Vulnhub靶机]Prime1渗透记录'
 tags = ['渗透','Vulnhub','WordPress','Fuzz','openssl']
+categories = ["靶机渗透"]
 +++
 
 ## 信息收集

@@ -3,6 +3,7 @@ date = '2026-10-17T15:31:48+08:00'
 draft = false
 title = '【CTFSHOW】无字母数字命令执行'
 tags = ["Web安全","CTFSHOW","CTF"]
+categories = ["CTF题解"]
 +++
 
 打开题目，直接输入命令发现无法执行，使用之前的字符串取反方法也无法绕过

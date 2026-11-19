@@ -3,6 +3,7 @@ date = '2026-10-24T17:43:53+08:00'
 draft = false
 title = '[VulnHub靶机]JARBAS渗透记录'
 tags = ['渗透','Vulnhub','Jenkins','Groovy','crontab']
+categories = ["靶机渗透"]
 +++
 
 ## 信息收集

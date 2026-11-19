@@ -3,6 +3,7 @@ date = '2026-11-07T20:34:13+08:00'
 draft = false
 title = '[HMV]Liar渗透记录'
 tags = ['HackMyVM','Windows','WinRM']
+categories = ["靶机渗透"]
 +++
 
 ## 主机发现与端口扫描

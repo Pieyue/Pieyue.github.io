@@ -1,0 +1,22 @@
+{{- /* 分类筛选条：全部 + 固定栏目，当前项高亮
+       · 参数：dict "current" <栏目名>，空串表示「全部」
+       · 每个胶囊链到自己的列表页（/posts/ 或 /categories/<栏目>/），分页由各自页面负责 */ -}}
+{{- $cats := slice "靶机渗透" "CTF题解" "Web安全" "基础与工具" "开发随笔" "学习笔记" -}}
+{{- $current := .current | default "" -}}
+{{- $total := len (where site.RegularPages "Section" "posts") -}}
+{{- /* 篇数按文章的首个分类统计：taxonomy 的 map key 会被 Hugo 转小写（ctf题解 / web安全），不能直接当键用 */ -}}
+{{- $counts := dict -}}
+{{- range where site.RegularPages "Section" "posts" -}}
+  {{- with .Params.categories -}}
+    {{- $key := index . 0 -}}
+    {{- $counts = merge $counts (dict $key (add (index $counts $key | default 0) 1)) -}}
+  {{- end -}}
+{{- end -}}
+<nav class="cat-nav" aria-label="文章分类">
+  <a class="cat-pill{{ if not $current }} is-active{{ end }}" href="/posts/"{{ if not $current }} aria-current="page"{{ end }}>全部<span class="cat-count">{{ $total }}</span></a>
+  {{- range $c := $cats -}}
+    {{- $termURL := "" -}}
+    {{- with site.GetPage (printf "/categories/%s" $c) }}{{ $termURL = .RelPermalink }}{{ end -}}
+    <a class="cat-pill{{ if eq $c $current }} is-active{{ end }}" href="{{ $termURL }}"{{ if eq $c $current }} aria-current="page"{{ end }}>{{ $c }}<span class="cat-count">{{ index $counts $c | default 0 }}</span></a>
+  {{- end }}
+</nav>

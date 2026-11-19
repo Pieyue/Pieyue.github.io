@@ -3,23 +3,44 @@ date = '2026-10-17T08:26:44+08:00'
 draft = false
 title = 'Linux提权'
 tags = ["Linux", "提权"]
+categories = ["基础与工具"]
 description = "Linux常见提权方法"
 +++
 
 ## 终端优化
 
-### 终端升级
-
-```shell
-python -c 'import pty;pty.spawn("/bin/shell")'
-stty raw -echo
-export TERM=xterm-color
-```
+### 方向键修复
 
 使用rlwrap修复方向键乱码问题
 
 ```shell
 rlwrap nc -lvnp 443
+```
+
+### 终端升级
+
+使用python:
+
+```shell
+python -c 'import pty;pty.spawn("/bin/shell")'
+```
+
+使用script:
+
+```shell
+script /dev/null -c bash
+```
+
+按`Ctrl+Z`从靶机中切回攻击机, 设置以下环境变量, 这样我们在输入控制字符(如`Ctrl+C`)时就会传到靶机中而不是中断连接
+
+```shell
+stty raw -echo
+```
+
+在靶机中设置以下环境变量, 可使终端支持清屏和色彩显示
+
+```shell
+export TERM=xterm-color
 ```
 
 ### rbash逃逸

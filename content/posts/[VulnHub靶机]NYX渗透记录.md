@@ -3,6 +3,7 @@ date = '2026-11-16T20:14:46+08:00'
 draft = false
 title = '[VulnHub靶机]NYX渗透记录'
 tags = ['渗透','Vulnhub']
+categories = ["靶机渗透"]
 +++
 
 ## 主机发现&信息收集

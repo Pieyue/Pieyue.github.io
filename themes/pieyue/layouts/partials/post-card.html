@@ -1,0 +1,40 @@
+{{- /* 文章列表卡片：列表页 / 栏目页 / 标签页共用
+       · 参数：dict "page" <Page>
+       · 缩略图取正文首图（thumb-url.html），无图时卡片自动变为纯文字版
+       · 栏目徽标是 span + data-href（卡片整块是链接，不能嵌套 <a>），点击由 app.js 委托处理 */ -}}
+{{- $p := .page -}}
+{{- $hideCat := .hideCat -}}
+{{- $thumb := partial "thumb-url.html" $p.Content -}}
+{{- $tags := $p.GetTerms "tags" -}}
+{{- $cat := "" -}}
+{{- $catURL := "" -}}
+{{- with $p.GetTerms "categories" -}}
+  {{- $term := index . 0 -}}
+  {{- $cat = $term.LinkTitle -}}
+  {{- $catURL = $term.RelPermalink -}}
+{{- end -}}
+<li>
+  <a class="post-item{{ if $thumb }} has-thumb{{ end }}" href="{{ $p.RelPermalink }}">
+    {{ if $thumb }}
+    <div class="post-aside">
+      <div class="post-thumb"><img src="{{ $thumb }}" alt="" loading="lazy" decoding="async"></div>
+      {{ with $tags }}
+      <div class="post-tags">{{ range . }}<span class="tag" data-q="{{ .LinkTitle }}"># {{ .LinkTitle }}</span>{{ end }}</div>
+      {{ end }}
+    </div>
+    {{ end }}
+    <div class="post-item-body">
+      <div class="post-item-head">
+        <h2>{{ $p.Title }}</h2>
+        <div class="post-item-meta">
+          {{ if not $hideCat }}{{ with $cat }}<span class="post-cat" data-href="{{ $catURL }}">{{ . }}</span>{{ end }}{{ end }}
+          <time class="post-date">{{ $p.Date.Format "2006-01-02" }}</time>
+        </div>
+      </div>
+      <p class="post-item-summary">{{ $p.Summary | plainify | chomp }}</p>
+      {{ with $tags }}
+      <div class="post-tags">{{ range . }}<span class="tag" data-q="{{ .LinkTitle }}"># {{ .LinkTitle }}</span>{{ end }}</div>
+      {{ end }}
+    </div>
+  </a>
+</li>

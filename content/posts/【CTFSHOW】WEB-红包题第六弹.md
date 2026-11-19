@@ -3,6 +3,7 @@ date = '2026-10-17T15:47:57+08:00'
 draft = false
 title = '【CTFSHOW】WEB 红包题第六弹'
 tags = ["Web安全","CTFSHOW","CTF","竟态条件"]
+categories = ["CTF题解"]
 +++
 
 ![登录框](https://cdn.jsdelivr.net/gh/Pieyue/blog_images@main/CTFSHOW/WEB-红包题第六弹/登录框.png)

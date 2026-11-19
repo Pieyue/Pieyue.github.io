@@ -3,6 +3,7 @@ date = '2026-11-13T19:52:05+08:00'
 draft = false
 title = '[VulnHub靶机]Fowsniff渗透记录'
 tags = ['渗透','Vulnhub','信息收集','pop3']
+categories = ["靶机渗透"]
 +++
 
 ## 主机发现&端口扫描

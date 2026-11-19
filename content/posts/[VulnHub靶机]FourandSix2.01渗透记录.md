@@ -3,6 +3,7 @@ date = '2026-11-07T11:48:38+08:00'
 draft = false
 title = '[VulnHub靶机]FourandSix2.01渗透记录'
 tags = ['渗透','Vulnhub','NFS','John','Kernel','密码爆破','OpenBSD']
+categories = ["靶机渗透"]
 +++
 
 ## 主机发现与端口扫描

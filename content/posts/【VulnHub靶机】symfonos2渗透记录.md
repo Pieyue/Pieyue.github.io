@@ -3,6 +3,7 @@ date = '2026-10-21T20:12:11+08:00'
 draft = false
 title = '【VulnHub靶机】symfonos2渗透记录'
 tags = ['渗透','vulnhub','mysql','密码爆破','FTP','SMB','LibreNMS','pspy']
+categories = ["靶机渗透"]
 +++
 
 ## 信息搜集

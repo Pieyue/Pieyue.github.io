@@ -3,6 +3,7 @@ date = '2026-10-17T15:25:24+08:00'
 draft = false
 title = '【CTFSHOW】无字母数字代码执行'
 tags = ["Web安全","CTFSHOW","CTF","编码","WAF绕过"]
+categories = ["CTF题解"]
 +++
 
 打开题目，是一个输入框

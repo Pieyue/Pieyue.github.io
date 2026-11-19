@@ -3,6 +3,7 @@ date = '2026-11-11T19:24:56+08:00'
 draft = false
 title = '[VulnHub靶机]ConnectTheDots渗透记录'
 tags = ['渗透','Vulnhub','Misc','polkit','FileCapability']
+categories = ["靶机渗透"]
 +++
 
 ## 主机发现&端口扫描

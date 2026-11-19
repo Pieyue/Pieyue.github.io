@@ -3,6 +3,7 @@ date = '2026-10-18T20:50:31+08:00'
 draft = false
 title = 'tmux常用操作与界面移动技巧'
 tags = ['效率']
+categories = ["基础与工具"]
 +++
 
 ## tmux操作

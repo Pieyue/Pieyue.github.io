@@ -6,6 +6,12 @@ resources/
 # 本地工具
 .mimosa/
 
+# AI 代理说明（仅本地）
+AGENTS.md
+
 # 系统与编辑器
 .DS_Store
 Thumbs.db
+
+# 预览文件
+.preview/

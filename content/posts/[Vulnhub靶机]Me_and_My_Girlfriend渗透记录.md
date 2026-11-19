@@ -3,6 +3,7 @@ date = '2026-11-12T20:40:47+08:00'
 draft = false
 title = '[Vulnhub靶机]Me_and_My_Girlfriend渗透记录'
 tags = ['渗透','Vulnhub','SQLi']
+categories = ["靶机渗透"]
 +++
 
 ## 主机发现&端口扫描

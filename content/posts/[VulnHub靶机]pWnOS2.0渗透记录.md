@@ -3,6 +3,7 @@ date = '2026-10-31T11:58:11+08:00'
 draft = false
 title = '[VulnHub靶机]pWnOS2.0渗透记录'
 tags = ['渗透','Vulnhub','SQLi','SimplePHPBlog','UDF提权']
+categories = ["靶机渗透"]
 +++
 
 ## 信息收集

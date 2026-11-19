@@ -1,0 +1,16 @@
+{{- /* 文章列表 + 分页：/posts/、栏目页、标签页共用
+       · 参数：dict "paginator" <Paginator> "hideCat" <bool>
+       · 只有一页时不渲染分页条，避免出现孤零零的「第 1 / 1 页」 */ -}}
+{{- $hideCat := .hideCat -}}
+<ul class="post-list">
+  {{- range .paginator.Pages }}{{ partial "post-card.html" (dict "page" . "hideCat" $hideCat) }}{{ end -}}
+</ul>
+{{- with .paginator -}}
+  {{- if gt .TotalPages 1 }}
+<nav class="pagination">
+  {{ if .HasPrev }}<a href="{{ .Prev.URL }}">← 上一页</a>{{ end }}
+  <span class="page-indicator">第 {{ .PageNumber }} / {{ .TotalPages }} 页</span>
+  {{ if .HasNext }}<a href="{{ .Next.URL }}">下一页 →</a>{{ end }}
+</nav>
+  {{- end -}}
+{{- end }}

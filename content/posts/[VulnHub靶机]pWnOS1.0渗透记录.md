@@ -3,6 +3,7 @@ date = '2026-11-01T10:31:05+08:00'
 draft = false
 title = '[VulnHub靶机]多种方法!pWnOS1.0渗透记录'
 tags = ['渗透','Vulnhub','Perl','WebMin','CGI','PathTraversal','ShellShock','Kernel','OpenSSL']
+categories = ["靶机渗透"]
 +++
 
 ## 信息收集

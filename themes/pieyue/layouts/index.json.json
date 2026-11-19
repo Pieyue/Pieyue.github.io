@@ -8,6 +8,7 @@
       "url" $p.RelPermalink
       "date" ($p.Date.Format "2006-01-02")
       "tags" $tags
+      "thumb" (partial "thumb-url.html" $p.Content | htmlUnescape)
       "text" ($p.Plain | htmlUnescape)) -}}
 {{- end -}}
 {{ $items | jsonify }}

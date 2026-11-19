@@ -160,6 +160,15 @@
     navigate('/search/?q=' + encodeURIComponent(tag.dataset.q));
   }, true);
 
+  /* 栏目徽标点击 → 栏目页（卡片整块是链接，同样用 span + 事件委托） */
+  document.addEventListener('click', (e) => {
+    const cat = e.target.closest('.post-cat[data-href]');
+    if (!cat) return;
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(cat.dataset.href);
+  }, true);
+
   window.addEventListener('popstate', () => {
     /* 仅 hash 变化（如点击目录锚点）时浏览器已自行滚动到目标，无需重渲染 */
     const here = location.pathname + location.search;

@@ -3,6 +3,7 @@ date = '2026-11-18T19:56:02+08:00'
 draft = false
 title = '[VulnHub靶机]SAR渗透记录'
 tags = ['渗透','Vulnhub','SAR2HTML','Command Injection']
+categories = ["靶机渗透"]
 +++
 
 ## 主机发现&端口扫描

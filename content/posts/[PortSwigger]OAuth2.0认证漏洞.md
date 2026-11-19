@@ -3,6 +3,7 @@ date = '2026-10-21T15:56:26+08:00'
 draft = false
 title = '[PortSwigger]OAuth2.0认证漏洞'
 tags = ["PortSwigger","Web安全","OAuth"]
+categories = ["Web安全"]
 +++
 
 ## OAuth基础

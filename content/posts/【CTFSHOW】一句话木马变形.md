@@ -3,6 +3,7 @@ date = '2026-10-17T15:15:42+08:00'
 draft = false
 title = '【CTFSHOW】一句话木马变形'
 tags = ["Web安全","CTFSHOW","CTF","编码","php"]
+categories = ["CTF题解"]
 +++
 
 ## 观察题目

@@ -3,6 +3,7 @@ date = '2026-11-02T16:53:28+08:00'
 draft = false
 title = '[Vulnhub靶机]HolynixV1渗透记录'
 tags = ['渗透','Vulnhub','SQLi','LFI','Upload','会话劫持']
+categories = ["靶机渗透"]
 +++
 
 ## 信息收集
