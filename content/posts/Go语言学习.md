@@ -650,3 +650,249 @@ uniq := slices.Compact(dup)   // 去掉相邻重复
 | 判断包含 | `x in xs` | `slices.Contains(xs, x)` |
 | 类型 | 可混合类型 | **元素类型必须一致** |
 
+## 函数与多返回值
+
+### 基本语法
+
+```go
+func add(a, b int) int { return a + b }        // 同名类型可合并
+func greet(name string) { }                     // 无返回值
+func describe(n string, age int) string { }     // 不同类型分开写
+```
+
+- 参数和返回值都**类型在后**（和 Python 相反）
+- 无返回值就不用写返回类型，不是 `void`
+- 命名参数可以写 `(a, b int)` 也可以 `(a int, b int)`，前者更简洁
+
+### 多返回值 —— Go 没有异常
+
+Go 用多返回值 + `error` 代替 try/except：
+
+```go
+func divide(a, b int) (int, int, error) {
+    if b == 0 {
+        return 0, 0, errors.New("除数不能为 0")   // 显式返回错误
+    }
+    return a / b, a % b, nil
+}
+
+q, r, err := divide(10, 3)
+if err != nil {
+    return err          // 立刻处理，没有异常传播
+}
+```
+
+调用方可以用 `_` 丢弃不需要的返回值：
+
+```go
+_, r, _ := divide(10, 4)
+```
+
+**坑**：多返回值不能当单值用，必须拆开：
+
+```go
+fmt.Println(minMax(nil))   // 编译错误：multiple-value ... in single-value context
+
+lo, hi := minMax(nil)
+fmt.Printf("%d %d\n", lo, hi)   // 正确
+```
+
+`map` 取值的 comma-ok 也是多返回值的应用：
+
+```go
+if v, ok := m["b"]; ok { } else { }
+```
+
+### 命名返回值
+
+```go
+func minMax(xs []int) (min, max int) {
+    if len(xs) == 0 {
+        return      // 裸 return，返回零值 0, 0
+    }
+    min, max = xs[0], xs[0]
+    // ...
+    return          // 返回当前 min/max
+}
+```
+
+命名返回值可以和 `defer` 配合修改返回值：
+
+```go
+func countWithDefer() (n int) {
+    defer func() { n++ }()
+    return 10       // 实际返回 11
+}
+```
+
+**建议**：只在函数很短、或需要 defer 修改返回值时用裸 return，长函数里都写完整的 `return a, b`，可读性更好。
+
+### 可变参数
+
+```go
+func sum(nums ...int) int { }     // nums 在函数内是 []int
+
+sum()                // 0
+sum(1, 2, 3)         // 6
+xs := []int{10, 20}
+sum(xs...)           // 展开切片，60
+```
+
+- `...` 必须在参数列表最后
+- 前面可以有固定参数：`func join(sep string, parts ...string)`
+- 对比 Python：`def sum(*nums)` 里 nums 是 tuple
+
+### 函数是一等公民
+
+```go
+// 匿名函数
+add := func(a, b int) int { return a + b }
+
+// 作为参数
+func apply(a, b int, op func(int, int) int) int { return op(a, b) }
+
+// 作为返回值
+func makeMultiplier(factor int) func(int) int {
+    return func(x int) int { return x * factor }
+}
+
+// 函数类型别名，让签名更好读
+type operator func(int, int) int
+
+// 立即执行（IIFE）
+func(msg string) { fmt.Println(msg) }("hi")
+```
+
+Python 的 lambda 只能是单个表达式，Go 的匿名函数可以有完整函数体、多返回值。
+
+### 闭包
+
+```go
+func newCounter() (inc func() int, reset func()) {
+    count := 0
+    inc = func() int { count++; return count }
+    reset = func() { count = 0 }
+    return
+}
+
+inc, reset := newCounter()
+inc()   // 1
+inc()   // 2
+reset()
+inc()   // 1
+```
+
+**循环变量捕获**：Go 1.22 之前所有闭包共享同一个循环变量，都会输出最终值；Go 1.22 起每次迭代是新变量，输出 `0 1 2`。你用的是 1.27，无需再写 `i := i`。
+
+### defer
+
+`defer` 注册的调用在函数返回时执行，**后进先出**：
+
+```go
+func demoTrace() {
+    defer fmt.Println("离开")   // 最后执行
+    fmt.Println("处理中")
+}
+// 输出：处理中 → 离开
+```
+
+多个 defer 逆序执行：
+
+```go
+defer fmt.Println("1")
+defer fmt.Println("2")
+defer fmt.Println("3")
+// 输出 3, 2, 1
+```
+
+最常见的用途是资源释放，无论正常返回还是 panic 都会执行：
+
+```go
+f, err := os.Open(path)
+if err != nil { return err }
+defer f.Close()
+```
+
+**两个坑**：
+
+1. 参数在**注册时**就求值了：
+   ```go
+   x := 1
+   defer fmt.Println(x)      // 打印 1
+   defer func() { fmt.Println(x) }()  // 打印 3，闭包读执行时的值
+   x = 3
+   ```
+2. 循环里 `defer` 会累积到函数返回才执行，批量关文件时要用显式函数包裹。
+
+### 参数传递：全部是值传递
+
+Go **只有值传递**，没有引用传递。所谓"切片/map 能改"是因为它们的值本身含指针。
+
+| 类型 | 传参后能否修改调用方的数据 | 原因 |
+| --- | --- | --- |
+| `int` / `string` / `bool` | ❌ | 纯值拷贝 |
+| `struct` | ❌ | 整体拷贝 |
+| `*struct` | ✅ | 传指针 |
+| `[]T`（改元素） | ✅ | header 副本仍指向同一底层数组 |
+| `[]T`（append/重新赋值） | ❌ | 只改了副本的 header |
+| `map` | ✅ | 内部是指针 |
+
+```go
+func modifyInt(n int) { n = 999 }        // 外面不变
+func modifySlice(xs []int) { xs[0] = 999 }   // 外面变了
+
+func reassignSlice(xs []int) {
+    xs = append(xs, 100)   // 外面长度不变
+}
+```
+
+实测：
+
+```
+int: 1
+slice 改元素: [999 2 3]
+slice 重新赋值: [1 2 3]
+map: map[k:999]
+struct 值传: 小明
+struct 指针传: 改了
+```
+
+这和 Python 完全不同：Python 的传参是"对象引用传递"，`list.append` 能改原列表但 `xs = xs + [1]` 不能。Go 的规则更统一——**想改调用方的东西，就传指针**。
+
+### 递归
+
+```go
+func factorial(n int) int {
+    if n <= 1 { return 1 }
+    return n * factorial(n-1)
+}
+```
+
+斐波那契带缓存（Go 没有 `@lru_cache`，手写 map）：
+
+```go
+func fibMemo(n int, cache map[int]int) int {
+    if n < 2 { return n }
+    if v, ok := cache[n]; ok { return v }
+    cache[n] = fibMemo(n-1, cache) + fibMemo(n-2, cache)
+    return cache[n]
+}
+```
+
+Go 没有 Python 的生成器/`yield`，递归收集结果通常靠传回调或用闭包捕获切片。
+
+### 与 Python 对照
+
+| | Python | Go |
+| --- | --- | --- |
+| 声明 | `def f(a, b):` | `func f(a int, b int) int` |
+| 返回值 | `return x` 单值 | 可多值，无需 tuple 包装 |
+| 错误处理 | `try/except` | `if err != nil` |
+| 默认参数 | `def f(a=1)` | **不支持**，用可变参数或选项模式 |
+| 关键字参数 | `f(a=1, b=2)` | **不支持**，只能按位置 |
+| 可变参数 | `*args` tuple | `...T` slice |
+| 匿名函数 | `lambda x: x+1` 单表达式 | `func(x int) int {}` 完整函数体 |
+| 装饰器 | `@decorator` | 无，用高阶函数包装 |
+| 资源清理 | `with` | `defer` |
+
+
