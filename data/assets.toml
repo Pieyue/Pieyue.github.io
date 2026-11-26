@@ -112,6 +112,11 @@ title = "天气之子 · 官方壁纸"
 src = "/wallpapers/normal/w12.jpg"
 type = "image"
 
+[[normal_wallpapers]]
+title = "梯子上的 Claude · Live2D"
+src = "/wallpapers/normal/w13.mp4"
+type = "video"
+
 # ---- 通透模式：音乐与壁纸配对（同一对索引必须对应） ----
 
 [[thorough_pairs]]
